@@ -13,9 +13,14 @@ export default function studentReducer(
     studentCourses: [],
     studentAssignments: [],
     selectedSemester: "",
-    selectedYear: "",
     selectedSubject: "",
-    selectedCourse: {},
+    selectedCourse: {
+      data: [],
+      selectedLEC: {},
+      selectedDIS: {},
+      selectedSEM: {},
+      selectedTA: {}
+    },
     selectedAssignment: {},
     loading: false
   }, action) {
@@ -26,10 +31,35 @@ export default function studentReducer(
         student: action.payload,
         loading: false
       };
-    case "SIGNED_IN":
+    case "ENTER_EMAIL":
       return {
         ...state,
-        student: action.payload,
+        student: {
+          ...state.student,
+          email: action.payload
+        }
+      }
+    case "ENTER_FIRST_NAME":
+      return {
+        ...state,
+        student: {
+          ...state.student,
+          firstName: action.payload
+        }
+      }
+    case "ENTER_LAST_NAME":
+      return {
+        ...state,
+        student: {
+          ...state.student,
+          lastName: action.payload
+        }
+      }
+    case "SIGNED_IN_AND_FETCHED_COURSES":
+      return {
+        ...state,
+        student: action.payload.student, //fix this later
+        studentCourses: action.payload.studentCourses,
         loading: false
       };
     case "SIGN_OUT":
@@ -43,10 +73,11 @@ export default function studentReducer(
         }
       };
     case "ADDED_COURSE":
+    debugger
       return {
         ...state,
         studentCourses: [...state.studentCourses, action.payload.studentCourse],
-        studentAssignments: [...state.studentAssignments, action.payload.studentAssignments],
+        studentAssignments: [...state.studentAssignments, ...action.payload.studentAssignments],
         loading: false
       };
     case "FETCHED_ASSIGNMENTS":
@@ -56,25 +87,19 @@ export default function studentReducer(
         loading: false
       };
     case "FETCHED_SUB_ASSIGNMENTS":
-      const updatedAssignments = state.studentAssignments.map(studentAssignment => {
+      const withUpdatedSubAssignment = state.studentAssignments.map(studentAssignment => {
         if (studentAssignment.studentAssignmentId === action.payload.parentAssignmentId) {
           return {
-            ...student_assignmnet,
+            ...studentAssignment,
             subAssignmnets: action.payload.subAssignments
           };
         } else {
-          return student_assignment
+          return studentAssignment
         };
       });
       return {
         ...state,
-        studentAssignments: updatedAssignments,
-        loading: false
-      };
-    case "FETCHED_COURSES":
-      return {
-        ...state,
-        studentCourses: action.payload,
+        studentAssignments: withUpdatedSubAssignment,
         loading: false
       };
     case "FETCHED_DIRECTORY_COURSES":
@@ -95,26 +120,21 @@ export default function studentReducer(
         },
         loading: false
       };
-    case "DIRECTORY_YEAR":
-      return {
-        ...state,
-        selectedYear: action.payload
-      }
-    case "DIRECTORY_SEMESTER":
+    case "SELECT_DIRECTORY_SEMESTER":
       return {
         ...state,
         selectedSemester: action.payload
       }
-    case "DIRECTORY_SUBJECT":
+    case "SELECT_DIRECTORY_SUBJECT":
       return {
         ...state,
         selectedSubject: action.payload
       };
     case "COMPLETED_ASSIGNMENT":
-      const updatedAssignments = state.studentAssignments.map(studentAssignment => {
+      const withCompletedAssignment = state.studentAssignments.map(studentAssignment => {
         if (studentAssignment.studentAssignmentId === action.payload) {
           return {
-            ...studentAssignmnet,
+            ...studentAssignment,
             completed: true
           };
         } else {
@@ -123,7 +143,7 @@ export default function studentReducer(
       });
       return {
         ...state,
-        studentAssignments: updatedAssignments,
+        studentAssignments: withCompletedAssignment,
         loading: false
       };
     case "SELECT_ASSIGNMENT":
@@ -134,13 +154,24 @@ export default function studentReducer(
         ...state,
         selectedAssignment: selectedAssignment
       };
-    case "SELECT_COURSE":
-      const selectedCourse = state.studentCourses.filter(studentCourse => {
-        return studentCourse.studentCourseId === action.payload
-      })[0];
+    case "SELECT_DIRECTORY_COURSE":
+      // const selectedCourse = state.studentCourses.filter(studentCourse => {
+      //   return studentCourse.studentCourseId === action.payload
+      // })[0];
       return {
         ...state,
-        selectedCourse: selectedCourse
+        selectedCourse: {
+          ...state.selectedCourse,
+          data: action.payload
+        }
+      }
+    case "SELECT_DIRECTORY_COURSE_COMPONENT":
+      return {
+        ...state,
+        selectedCourse: {
+          ...state.selectedCourse,
+          [`selected${action.payload.type}`]: action.payload.component
+        }
       }
     case "LOADING":
       return {

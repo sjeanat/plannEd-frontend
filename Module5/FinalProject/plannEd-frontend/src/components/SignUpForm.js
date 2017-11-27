@@ -1,24 +1,64 @@
 import React, { Component } from 'react';
+import { signUpUser, enterEmail, enterFirstName, enterLastName } from '../actions/students';
+import { connect } from 'react-redux';
 
-export default class SignUpForm extends Component {
+class SignUpForm extends Component {
 
-  // handleChange = (event) => {
-  //   this.props.onUpdateEmail(event.target.value)
-  // };
-  //
-  // handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   this.props.onSignin(this.props.email);
-  // };
+  handleEmailChange = (event) => {
+    this.props.onEnterEmail(event.target.value)
+  };
+
+  handleFirstNameChange = (event) => {
+    this.props.onEnterFirstName(event.target.value)
+  };
+
+  handleLastNameChange = (event) => {
+    this.props.onEnterLastName(event.target.value)
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    this.props.onSignUp(this.props.student.email, this.props.student.firstName, this.props.student.lastName);
+    this.props.history.push("/home");
+  };
 
   render() {
+    console.log("signUpForm props:", this.props)
     return (
       <div>
-        <form>
-          <input type="text" />
-          <input type="submit" value="sign un"/>
+        <form onSubmit={this.handleSubmit}>
+          Email: <input onChange={this.handleEmailChange} type="text" value={this.props.student.email}/>
+          First Name: <input onChange={this.handleFirstNameChange} type="text" value={this.props.student.firstName}/>
+          Last Name: <input onChange={this.handleLastNameChange} type="text" value={this.props.student.lastName}/>
+          <input type="submit" value="sign up"/>
         </form>
       </div>
     );
   };
 };
+
+function mapStateToProps(state) {
+  console.log("SignUpForm state:", state)
+  return {
+    student: state.student
+  };
+};
+
+function mapDispatchToProps(dispatch) {
+  return {
+    onSignUp: (email, firstName, lastName) => {
+      dispatch(signUpUser(email, firstName, lastName));
+    },
+    onEnterEmail: (email) => {
+      dispatch(enterEmail(email));
+    },
+    onEnterFirstName: (firstName) => {
+      dispatch(enterFirstName(firstName));
+    },
+    onEnterLastName: (lastName) => {
+      dispatch(enterLastName(lastName));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUpForm);

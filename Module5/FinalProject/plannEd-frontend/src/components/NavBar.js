@@ -1,28 +1,58 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import './NavBar.css';
+import { connect } from 'react-redux';
+import { signOutUser } from '../actions/students';
 
-export default class NavBar extends Component {
+class NavBar extends Component {
+
+  handleSignOut = () => {
+    this.props.onSignOut();
+  };
 
   render() {
-    const signed_in_links = this.props.studentCourses.map(studentCourse => {
-        return (<li className="navlink normal" activeClassName="navlink active"><NavLink to="/{studentCourse.title.split(" ").join("_")}" exact>{studentCourse.title}</NavLink></li>);
-      });
-    };
+    console.log("NavBar props:", this.props)
+    // const signed_in_links = this.props.studentCourses.map(studentCourse => {
+    //     return (<li className="navlink"><NavLink to={"/" + studentCourse.title.split(' ').join('-').toLowerCase()} exact>{studentCourse.title}</NavLink></li>);
+    //   });
 
     return (
       <div className="navbar-wrapper">
         <ul className="navlinks-wrapper">
-          <li className="navlink normal" activeClassName="navlink active"><NavLink to="/home" exact>Home</NavLink></li>
+          <li className="navlink"><NavLink to="/home" exact>Home</NavLink></li>
           {this.props.studentId
             ?
-              signed_in_links
+              <div>
+                <li className="navlink" ><NavLink to="/assignments" exact>Assignments</NavLink></li>
+                <li className="navlink" ><NavLink to="/course-directory" exact>Course Directory</NavLink></li>
+                <li className="navlink" onClick={this.handleSignOut}><NavLink to="/home" exact>Sign Out</NavLink></li>
+              </div>
             :
-              <li className="navlink normal" activeClassName="navlink active"><NavLink to="/sign_in" exact>Sign In</NavLink></li>
-              <li className="navlink normal" activeClassName="navlink active"><NavLink to="/sign_up" exact>Sign Up</NavLink></li>
+            <div>
+              <li className="navlink"><NavLink to="/sign-up" exact>Sign Up</NavLink></li>
+              <li className="navlink"><NavLink to="/sign-in" exact>Sign In</NavLink></li>
+            </div>
           }
         </ul>
       </div>
     );
   };
 };
+
+function mapStateToProps(state) {
+  console.log("NavBar state:", state)
+  return {
+    studentId: state.student.id,
+    studentCourses: state.studentCourses
+  };
+};
+
+function mapDispatchToProps(dispatch) {
+  return {
+    onSignOut: () => {
+      dispatch(signOutUser());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

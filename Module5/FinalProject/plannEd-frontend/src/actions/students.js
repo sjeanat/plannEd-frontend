@@ -26,9 +26,54 @@ export function signInUser(email) { //CHECKED
       body: JSON.stringify({ email })
     })
     .then(resp => resp.json())
-    .then(student => {dispatch({ type: "SIGNED_IN", payload: student.id })});
+    .then(json => {
+      return fetch(`http://localhost:3000/api/v1/students/student_courses?studentId=${json.student.id}`)
+      .then(resp => resp.json())
+      .then(data => {
+        dispatch({ type: "SIGNED_IN_AND_FETCHED_COURSES", payload: {
+              studentCourses: data.studentCourses,
+              student: json.student
+            }
+        });
+      });
+    });
   };
 };
+
+export function enterEmail(email) {
+  return {
+    type: "ENTER_EMAIL",
+    payload: email
+  }
+}
+
+export function enterFirstName(firstName) {
+  return {
+    type: "ENTER_FIRST_NAME",
+    payload: firstName
+  }
+}
+
+export function enterLastName(lastName) {
+  return {
+    type: "ENTER_LAST_NAME",
+    payload: lastName
+  }
+}
+
+export function enterDirectorySemester(semester) {
+  return {
+    type: "SELECT_DIRECTORY_SEMESTER",
+    payload: semester
+  }
+}
+
+export function enterDirectorySubject(subject) {
+  return {
+    type: "SELECT_DIRECTORY_SUBJECT",
+    payload: subject
+  }
+}
 
 export function signOutUser() { //CHECKED
   return { type: "SIGN_OUT"};
@@ -46,7 +91,7 @@ export function addCourse(student, studentCourse, instructors) { //CHECKED
       body: JSON.stringify({ student, studentCourse, instructors })
     })
     .then(resp => resp.json())
-    .then(data => dispatch({ type: 'ADDED_COURSE', payload: { course: data.studentCourse, assignments: data.studentAssignments }));
+    .then(data => dispatch({ type: 'ADDED_COURSE', payload: { studentCourse: data.studentCourse, studentAssignments: data.studentAssignments }}));
   };
 };
 
@@ -71,33 +116,24 @@ export function fetchAssignments(studentId) { // CHECKED
 };
 
 
-export function fetchCourses(studentId) { // CHECKED
-  return (dispatch) => {
-    dispatch({ type: "LOADING" });
-    return fetch(`http://localhost:3000/api/v1/students/student_courses?student_id=${studentId}`)
-      .then(resp => resp.json())
-      .then(data => {
-        dispatch({ type: "FETCHED_COURSES", payload: data.studentCourses })});
-  };
-};
 
-export function fetchDirectorySubjects(semester, year) { // CHECKED
+export function fetchDirectorySubjects(semester) { // CHECKED
   return (dispatch) => {
     dispatch({ type: "LOADING" });
-    return fetch(`https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${semester}${year}`)
+    return fetch(`https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${semester}`)
 	    .then(resp => resp.json())
 	    .then(json => {
         dispatch({ type: "FETCHED_DIRECTORY_SUBJECTS", payload: json.data.subjects})});
   };
 };
 
-export function fetchDirectoryCourses(semester, year, subject) { // CHECKED
+export function fetchDirectoryCourses(semester, subject) { // CHECKED
   return (dispatch) => {
     dispatch({ type: "LOADING" });
-    return fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${semester}${year}&subject=${subject}`)
+    return fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${semester}&subject=${subject}`)
 	    .then(resp => resp.json())
 	    .then(json => {
-        dispatch({ type: "FETCHED_DIRECTORY_COURSES", payload: json.data.courses })});
+        dispatch({ type: "FETCHED_DIRECTORY_COURSES", payload: json.data.classes })});
   };
 };
 
@@ -126,9 +162,19 @@ export function selectAssignment(studentAssignmentId) {
   }
 };
 
-export function selectCourse(studentCourseId) {
+export function selectDirectoryCourse(course) {
   return {
-    type: "SELECT_COURSE",
-    payload: studentCourseId
+    type: "SELECT_DIRECTORY_COURSE",
+    payload: course
+  }
+};
+
+export function selectDirectoryCourseComponent(type, component) {
+  return {
+    type: "SELECT_DIRECTORY_COURSE_COMPONENT",
+    payload: {
+      type,
+      component
+    }
   }
 };
