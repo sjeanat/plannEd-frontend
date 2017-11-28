@@ -7,12 +7,13 @@ class CourseCard extends Component {
 
   handleAddCourse = (event) => {
     const studentCourse = this.studentCourseCreator();
-    const instructors = this.props.selectedCourse.selectedLEC.meetings[0].instructors; //pull out intstructors
-    this.props.onAddCourse(this.props.student, studentCourse, instructors)
+    const instructors = this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].instructors; //pull out intstructors
+    this.props.onAddCourse(this.props.student, studentCourse, instructors);
+    this.props.history.push("/assignments");
   };
 
   studentCourseCreator = () => {
-    const studentCourse = { //complete this!
+    let studentCourse = {
       crseId: this.props.selectedCourse.data.crseId,
       subject: this.props.selectedCourse.data.subject,
       catalogNbr: this.props.selectedCourse.data.catalogNbr,
@@ -22,13 +23,26 @@ class CourseCard extends Component {
       unitsMaximum: this.props.selectedCourse.data.enrollGroups[0].unitsMaximum,
       sessionBeginDt: this.props.selectedCourse.data.enrollGroups[0].sessionBeginDt,
       sessionEndDt: this.props.selectedCourse.data.enrollGroups[0].sessionEndDt,
-      section: this.props.selectedCourse.selectedLEC.section,
-      timeStart: this.props.selectedCourse.selectedLEC.meetings[0].timeStart,
-      timeEnd: this.props.selectedCourse.selectedLEC.meetings[0].timeEnd,
-      pattern: this.props.selectedCourse.selectedLEC.meetings[0].pattern,
-      facilityDescr: this.props.selectedCourse.selectedLEC.meetings[0].facilityDescr,
-      facilityDescrShort: this.props.selectedCourse.selectedLEC.meetings[0].facilityDescrshort,
+      section: this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].section,
+      timeStart: this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].timeStart,
+      timeEnd: this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].timeEnd,
+      pattern: this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].pattern,
+      facilityDescr: this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].facilityDescr,
+      facilityDescrShort: this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].facilityDescrshort,
+      components: [] //add this to backend
     };
+    this.props.selectedCourse.data.enrollGroups[0].componentsRequired.slice(1).forEach(component => {
+      studentCourse.components.push({
+        title: this.props.selectedCourse.data.titleLong,
+        component: component,
+        section: this.props.selectedCourse[`selected${component}`].section,
+        timeStart: this.props.selectedCourse[`selected${component}`].timeStart,
+        timeEnd: this.props.selectedCourse[`selected${component}`].timeEnd,
+        pattern: this.props.selectedCourse[`selected${component}`].pattern,
+        facilityDescr: this.props.selectedCourse[`selected${component}`].facilityDescr,
+        facilityDescrShort: this.props.selectedCourse[`selected${component}`].facilityDescrshort,
+      })
+    });
     return studentCourse;
   };
 
@@ -37,12 +51,25 @@ class CourseCard extends Component {
   };
 
   requiredComponentsSelected = () => {
-    //check if there is a selection for each required component
+    if (!this.props.selectedCourse.data) {
+        return false;
+    };
+    const requiredComponents = this.props.selectedCourse.data.enrollGroups[0].componentsRequired;
+    let selected = false;
+    requiredComponents.forEach(component => {
+      this.props.selectedCourse[`selected${component}`] ? selected = true : selected = false;
+    });
+    return selected;
   };
 
   render() {
-    const courseDetails = this.props.course.enrollGroups[0].classSections.map((sect, idx) => {
-      return <CourseDetails key={idx} data={sect} onSelectComponent={this.props.onSelectComponent} />
+    let courseDetails = [];
+    this.props.course.enrollGroups.forEach(group => {
+      group.classSections.forEach(section => {
+        section.meetings.forEach((meeting, idx) => {
+          courseDetails.push(<CourseDetails key={idx} selectedCourse={this.props.selectedCourse} ssrComponent={section.ssrComponent} section={section.section} data={meeting} onSelectComponent={this.props.onSelectComponent} />);
+        });
+      });
     });
 
     return (
@@ -50,24 +77,19 @@ class CourseCard extends Component {
         <h1>{this.props.course.titleLong}</h1>
         <p>{this.props.course.description}</p>
         <button onClick={this.handleDetails}>See Details</button>
-        {this.props.selectedCourse.data.crseId === this.props.course.crseId
+        {this.props.selectedCourse.data ? this.props.selectedCourse.data.crseId === this.props.course.crseId
           ?
             <div>
               {courseDetails}
+              {this.requiredComponentsSelected()
+                ?
+                  <button onClick={this.handleAddCourse}>Add Course</button>
+                :
+                  <p>Please select required components {this.props.selectedCourse.data ? ": " + this.props.selectedCourse.data.enrollGroups[0].componentsRequired.join(", ") : null }</p>
+              }
             </div>
-          :
-            null
+          : null : null
         }
-        {/*this.requiredComponentsSelected()
-          ?
-            <p>Please select one of each required component</p>
-
-            TODO actually implement this logic later
-
-          :
-          <button onClick=>Add Course</button>
-        */}
-        <button onClick={this.handleAddCourse}>Add Course</button>
       </div>
     );
   };
@@ -88,8 +110,8 @@ function mapDispatchToProps(dispatch) {
     onSelectCourse: (course) => {
       dispatch(selectDirectoryCourse(course));
     },
-    onSelectComponent: (type, component) => {
-      dispatch(selectDirectoryCourseComponent(type, component));
+    onSelectComponent: (type, component, section) => {
+      dispatch(selectDirectoryCourseComponent(type, component, section));
     }
   }
 }

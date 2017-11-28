@@ -12,7 +12,7 @@ class DirectoryContainer extends Component {
       return (
         <div className="course-container-wrapper">
           <DirectorySearchForm />
-          <DirectoryCourses courses={this.props.directoryCourses} studentCourses={this.props.studentCourses} student={this.props.student}/>
+          <DirectoryCourses history={this.props.history} courses={this.props.directoryCourses} studentCourses={this.props.studentCourses} student={this.props.student}/>
         </div>
       )
     } else {

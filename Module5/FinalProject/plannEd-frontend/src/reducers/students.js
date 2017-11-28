@@ -15,11 +15,11 @@ export default function studentReducer(
     selectedSemester: "",
     selectedSubject: "",
     selectedCourse: {
-      data: [],
-      selectedLEC: {},
-      selectedDIS: {},
-      selectedSEM: {},
-      selectedTA: {}
+      data: null,
+      selectedLEC: null,
+      selectedDIS: null,
+      selectedSEM: null,
+      selectedTA: null
     },
     selectedAssignment: {},
     loading: false
@@ -73,11 +73,17 @@ export default function studentReducer(
         }
       };
     case "ADDED_COURSE":
-    debugger
       return {
         ...state,
         studentCourses: [...state.studentCourses, action.payload.studentCourse],
         studentAssignments: [...state.studentAssignments, ...action.payload.studentAssignments],
+        selectedCourse: {
+          data: null,
+          selectedLEC: null,
+          selectedDIS: null,
+          selectedSEM: null,
+          selectedTA: null
+        },
         loading: false
       };
     case "FETCHED_ASSIGNMENTS":

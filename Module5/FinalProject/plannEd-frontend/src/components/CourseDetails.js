@@ -1,28 +1,27 @@
 import React, { Component } from 'react';
+import CourseMeetingDetails from './CourseMeetingDetails';
 
 class CourseDetails extends Component {
 
   handleSelectComponent = () => {
-    this.props.onSelectComponent("LEC", this.props.data)
+    this.props.onSelectComponent(this.props.ssrComponent, this.props.data, this.props.section)
   };
 
   render() {
-    const instructors = this.props.data.meetings[0].instructors.map((inst, idx) => {
+    const instructors = this.props.data.instructors.map((inst, idx) => {
       return <p key={idx}>{inst.firstName + " " + inst.lastName + ", " + inst.netid + "@cornell.edu"}</p>
     })
     return(
       <div>
-        <h3>{this.props.data.ssrComponent + " Section: " + this.props.data.section}</h3>
-          <p>{this.props.data.meetings[0].pattern + ":" + this.props.data.meetings[0].timeStart + "-" + this.props.data.meetings[0].timeEnd}</p>
-          <p>{this.props.data.meetings[0].facilityDescrshort}</p>
+        <h3>{this.props.ssrComponent + " Section: " + this.props.section}</h3>
+          <p>{this.props.data.pattern + ":" + this.props.data.timeStart + "-" + this.props.data.timeEnd}</p>
+          <p>{this.props.data.facilityDescrshort}</p>
         <h4>Instructors:</h4>
           {instructors}
-        <button onClick={this.handleSelectComponent}>Add Component</button>
+        <button onClick={this.handleSelectComponent}>Add {this.props.ssrComponent} {this.props.section}</button>
       </div>
     )
   }
 };
 
 export default CourseDetails;
-
-//not accounting for different meetings

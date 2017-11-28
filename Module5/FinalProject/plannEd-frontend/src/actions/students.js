@@ -120,6 +120,7 @@ export function fetchAssignments(studentId) { // CHECKED
 export function fetchDirectorySubjects(semester) { // CHECKED
   return (dispatch) => {
     dispatch({ type: "LOADING" });
+    console.log("fetch directory subjects")
     return fetch(`https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${semester}`)
 	    .then(resp => resp.json())
 	    .then(json => {
@@ -169,12 +170,15 @@ export function selectDirectoryCourse(course) {
   }
 };
 
-export function selectDirectoryCourseComponent(type, component) {
+export function selectDirectoryCourseComponent(type, component, section) {
   return {
     type: "SELECT_DIRECTORY_COURSE_COMPONENT",
     payload: {
       type,
-      component
+      component: {
+        ...component,
+        section
+      }
     }
   }
 };
