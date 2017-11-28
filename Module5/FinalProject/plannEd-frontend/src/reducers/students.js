@@ -17,7 +17,7 @@ export default function studentReducer(
       courseFilter: "All Courses",
       sortBy: "Due Date",
       sortDirection: "Ascending",
-      limit: 10,
+      limit: "",
       display: []
     },
     selectedSemester: "",
@@ -249,7 +249,7 @@ export default function studentReducer(
         default: break;
       };
       let date = new Date();
-      const limitDate = new Date(date.setDate(date.getDate() + parseInt(state.studentAssignments.limit)))
+      const limitDate = state.studentAssignments.limit === "" ? new Date(date.setDate(date.getDate() + 10)) : new Date(date.setDate(date.getDate() + parseInt(state.studentAssignments.limit)))
       assignmentsDisplay = assignmentsDisplay.filter(assignment => (new Date(assignment.dueDate)) < limitDate);
       //apply limit
       return {
