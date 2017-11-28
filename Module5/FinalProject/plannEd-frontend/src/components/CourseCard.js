@@ -55,11 +55,11 @@ class CourseCard extends Component {
         return false;
     };
     const requiredComponents = this.props.selectedCourse.data.enrollGroups[0].componentsRequired;
-    let selected = false;
+    let selected = [];
     requiredComponents.forEach(component => {
-      this.props.selectedCourse[`selected${component}`] ? selected = true : selected = false;
+      this.props.selectedCourse[`selected${component}`] ? selected.push(true) : selected.push(false);
     });
-    return selected;
+    return selected.includes(false) ? false : true;
   };
 
   render() {
