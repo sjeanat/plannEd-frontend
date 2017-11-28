@@ -16,7 +16,8 @@ export default function studentReducer(
       completedFilter: "None",
       courseFilter: "All Courses",
       sortBy: "Due Date",
-      limit: "None",
+      sortDirection: "Ascending",
+      limit: 10,
       display: []
     },
     selectedSemester: "",
@@ -212,41 +213,43 @@ export default function studentReducer(
           completedFilter: "None",
           courseFilter: "All",
           sortBy: "Due Date",
+          sortDirection: "Ascending",
           limit: "None",
           display: state.studentAssignments.data
         }
       }
     case "CHANGE_ASSIGNMENTS_DISPLAY":
       let assignmentsDisplay = state.studentAssignments.data;
-      console.log("change display studentAssignments.completedFilter is none?", (state.studentAssignments.completedFilter === "None"))
       switch (state.studentAssignments.completedFilter) {
         case "None":
           break;
         case "Completed":
-          console.log("change display completed")
           assignmentsDisplay = assignmentsDisplay.filter(assignment => assignment.completed);
           break;
         case "Incomplete":
-          console.log("change display incomplete")
           assignmentsDisplay = assignmentsDisplay.filter(assignment => !assignment.completed);
           break;
         default: break;
       };
       if (state.studentAssignments.courseFilter !== "All Courses") {
-        console.log("change display course")
         assignmentsDisplay = assignmentsDisplay.filter(assignment => assignment.studentCourseId === parseInt(state.studentAssignments.courseFilter));
       };
       switch (state.studentAssignments.sortBy) {
         case "Due Date":
-          console.log("change display sort by")
           assignmentsDisplay = assignmentsDisplay.sort((a,b) => {
             let dateA = new Date(a.dueDate);
             let dateB = new Date(b.dueDate);
             return dateA - dateB;
           });
+          if (state.studentAssignments.sortDirection === "Descending") {
+            assignmentsDisplay = assignmentsDisplay.reverse();
+          };
           break;
+        // case "Course":
         default: break;
       };
+
+      assignmentsDisplay = assignmentsDisplay.slice(0, state.studentAssignments.limit)
       //apply limit
       return {
         ...state,
@@ -285,6 +288,30 @@ export default function studentReducer(
         studentAssignments: {
           ...state.studentAssignments,
           completedFilter: "None"
+        }
+      }
+    case "SORT_BY":
+      return {
+        ...state,
+        studentAssignments: {
+          ...state.studentAssignments,
+          sortBy: action.payload
+        }
+      }
+    case "SORT_DIRECTION":
+      return {
+        ...state,
+        studentAssignments: {
+          ...state.studentAssignments,
+          sortDirection: action.payload
+        }
+      }
+    case "LIMIT_CHANGE":
+      return {
+        ...state,
+        studentAssignments: {
+          ...state.studentAssignments,
+          limit: action.payload
         }
       }
     default:

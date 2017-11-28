@@ -184,15 +184,24 @@ export function selectDirectoryCourseComponent(type, component, section) {
   }
 };
 
-export function sortByDueDate() { // COMPLETE BELOW //
+export function sortBy(attribute) { // COMPLETE BELOW //
   return {
-    type: "SORT_BY_DUE_DATE"
+    type: "SORT_BY",
+    payload: attribute
   }
 };
 
-export function sortReverse() {
+export function sortDirection(direction) {
   return {
-    type: "REVERSE_SORT"
+    type: "SORT_DIRECTION",
+    payload: direction
+  }
+};
+
+export function limitChange(limit) {
+  return {
+      type: "LIMIT_CHANGE",
+      payload: limit
   }
 };
 
