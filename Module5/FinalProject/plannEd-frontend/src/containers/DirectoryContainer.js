@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import AssignmentList from '../components/AssignmentList';
 import DirectorySearchForm from '../components/DirectorySearchForm';
 import DirectoryCourses from '../components/DirectoryCourses';
 

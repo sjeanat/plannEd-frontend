@@ -75,6 +75,7 @@ class CourseCard extends Component {
     return (
       <div>
         <h1>{this.props.course.titleLong}</h1>
+        <h4>{this.props.course.subject} {this.props.course.catalogNbr}</h4>
         <p>{this.props.course.description}</p>
         <button onClick={this.handleDetails}>See Details</button>
         {this.props.selectedCourse.data ? this.props.selectedCourse.data.crseId === this.props.course.crseId
@@ -82,7 +83,7 @@ class CourseCard extends Component {
             <div>
               {courseDetails}
               {this.requiredComponentsSelected()
-                ?
+                ? //button shows up if other course shares required component
                   <button onClick={this.handleAddCourse}>Add Course</button>
                 :
                   <p>Please select required components {this.props.selectedCourse.data ? ": " + this.props.selectedCourse.data.enrollGroups[0].componentsRequired.join(", ") : null }</p>

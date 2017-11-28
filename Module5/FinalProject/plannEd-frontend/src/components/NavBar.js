@@ -11,11 +11,6 @@ class NavBar extends Component {
   };
 
   render() {
-    console.log("NavBar props:", this.props)
-    // const signed_in_links = this.props.studentCourses.map(studentCourse => {
-    //     return (<li className="navlink"><NavLink to={"/" + studentCourse.title.split(' ').join('-').toLowerCase()} exact>{studentCourse.title}</NavLink></li>);
-    //   });
-
     return (
       <div className="navbar-wrapper">
         <ul className="navlinks-wrapper">
@@ -40,7 +35,6 @@ class NavBar extends Component {
 };
 
 function mapStateToProps(state) {
-  console.log("NavBar state:", state)
   return {
     studentId: state.student.id,
     studentCourses: state.studentCourses

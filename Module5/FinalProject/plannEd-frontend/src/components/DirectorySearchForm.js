@@ -24,7 +24,6 @@ class DirectorySearchForm extends Component {
   };
 
   render() {
-    console.log("directory search form, render:", this.props.directorySubjects)
     const subjectOptions = this.props.directorySubjects.map((subj, idx) => {
       return <option key={idx} value={subj.value}>{subj.descrformal}</option>
     })

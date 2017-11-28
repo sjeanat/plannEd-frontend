@@ -23,7 +23,6 @@ class SignUpForm extends Component {
   };
 
   render() {
-    console.log("signUpForm props:", this.props)
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -38,7 +37,6 @@ class SignUpForm extends Component {
 };
 
 function mapStateToProps(state) {
-  console.log("SignUpForm state:", state)
   return {
     student: state.student
   };

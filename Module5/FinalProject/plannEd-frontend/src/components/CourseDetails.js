@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import CourseMeetingDetails from './CourseMeetingDetails';
 
 class CourseDetails extends Component {
 

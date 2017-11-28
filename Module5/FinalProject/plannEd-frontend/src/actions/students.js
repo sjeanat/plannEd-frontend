@@ -1,4 +1,4 @@
-export function signUpUser(email, firstName, lastName) { //CHECKED
+export function signUpUser(email, firstName, lastName) {
   return (dispatch) => {
     dispatch({ type: "LOADING" });
     return fetch("http://localhost:3000/api/v1/students/sign_up", {
@@ -14,7 +14,7 @@ export function signUpUser(email, firstName, lastName) { //CHECKED
   };
 };
 
-export function signInUser(email) { //CHECKED
+export function signInUser(email) {
   return (dispatch) => {
     dispatch({ type: "LOADING" });
     return fetch(`http://localhost:3000/api/v1/students/sign_in`, {
@@ -75,11 +75,11 @@ export function enterDirectorySubject(subject) {
   }
 }
 
-export function signOutUser() { //CHECKED
+export function signOutUser() {
   return { type: "SIGN_OUT"};
 };
 
-export function addCourse(student, studentCourse, instructors) { //CHECKED
+export function addCourse(student, studentCourse, instructors) {
   return (dispatch) => {
     dispatch({ type: 'LOADING'});
     return fetch(`http://localhost:3000/api/v1/students/add_student_course`, {
@@ -151,7 +151,8 @@ export function completeAssignment(studentAssignmentId) { // CHECKED
     })
       .then(resp => resp.json())
       .then(json => {
-        dispatch({ type: "COMPLETED_ASSIGNMENT", payload: json.studentAssignment.studentAssignmentId })
+        dispatch({ type: "COMPLETED_ASSIGNMENT", payload: json.studentAssignment })
+        dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
       })
   };
 };
@@ -180,5 +181,55 @@ export function selectDirectoryCourseComponent(type, component, section) {
         section
       }
     }
+  }
+};
+
+export function sortByDueDate() { // COMPLETE BELOW //
+  return {
+    type: "SORT_BY_DUE_DATE"
+  }
+};
+
+export function sortReverse() {
+  return {
+    type: "REVERSE_SORT"
+  }
+};
+
+export function filterByCourse(studentCourseId) {
+  return {
+    type: "FILTER_BY_COURSE",
+    payload: studentCourseId
+  }
+};
+
+export function filterByCompleted() {
+  return {
+    type: "FILTER_BY_COMPLETED"
+  }
+};
+
+export function filterByIncomplete() {
+  return {
+    type: "FILTER_BY_INCOMPLETE"
+  }
+};
+
+export function removeCompletedFilter() {
+  return {
+    type: "REMOVE_COMPLETED_FILTER"
+  }
+};
+
+export function filterByDueDate(days) {
+  return {
+    type: "FILTER_BY_DUE_DATE",
+    payload: days
+  }
+};
+
+export function changeAssignmentsDisplay() {
+  return {
+    type: "CHANGE_ASSIGNMENTS_DISPLAY"
   }
 };
