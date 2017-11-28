@@ -248,8 +248,9 @@ export default function studentReducer(
         // case "Course":
         default: break;
       };
-
-      assignmentsDisplay = assignmentsDisplay.slice(0, state.studentAssignments.limit)
+      let date = new Date();
+      const limitDate = new Date(date.setDate(date.getDate() + parseInt(state.studentAssignments.limit)))
+      assignmentsDisplay = assignmentsDisplay.filter(assignment => (new Date(assignment.dueDate)) < limitDate);
       //apply limit
       return {
         ...state,
