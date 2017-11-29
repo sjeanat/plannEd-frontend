@@ -4,6 +4,7 @@ import SubAssignmentCard from './SubAssignmentCard';
 export default class AssignmentCard extends Component {
 
   componentDidMount() {
+    console.log("assignment card CDM, assignment:", this.props.assignment)
     this.props.assignment.hasSubAssignments ? this.props.onFetchSubAssignments(this.props.assignment.studentAssignmentId) : null;
   };
 
@@ -29,7 +30,7 @@ export default class AssignmentCard extends Component {
   };
 
   showFirstSubAssignments = () => {
-    console.log("first sub assignments", this.props.assignment)
+    console.log("first sub assignments", this.props.assignment) //LEFT OFF HERE!!
   };
 
   render() {

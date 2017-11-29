@@ -91,7 +91,10 @@ export function addCourse(student, studentCourse, instructors) {
       body: JSON.stringify({ student, studentCourse, instructors })
     })
     .then(resp => resp.json())
-    .then(data => dispatch({ type: 'ADDED_COURSE', payload: { studentCourse: data.studentCourse, studentAssignments: data.studentAssignments }}));
+    .then(data => {
+      console.log("added course")
+      dispatch({ type: 'ADDED_COURSE', payload: { studentCourse: data.studentCourse, studentAssignments: data.studentAssignments }})
+    });
   };
 };
 
@@ -115,6 +118,7 @@ export function fetchAssignments(studentId) { // CHECKED
     return fetch(`http://localhost:3000/api/v1/students/student_assignments?studentId=${studentId}`)
     .then(resp => resp.json())
     .then(data => {
+      console.log("fetched assignments")
       dispatch({ type: "FETCHED_ASSIGNMENTS", payload: data.studentAssignments })
       dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
     });
