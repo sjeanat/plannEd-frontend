@@ -100,10 +100,13 @@ export function fetchSubAssignments(studentAssignmentId) { // CHECKED
     dispatch({type: "LOADING"});
     return fetch(`http://localhost:3000/api/v1/students/get_sub_assignments?studentAssignmentId=${studentAssignmentId}`)
       .then(resp => resp.json())
-      .then(data => dispatch({ type: "FETCHED_SUB_ASSIGNMENTS", payload: {
+      .then(data => {
+        dispatch({ type: "FETCHED_SUB_ASSIGNMENTS", payload: {
         parentAssignmentId: data.parentAssignmentId,
         subAssignments: data.subAssignments
-      }}));
+        }})
+        dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
+    });
   }
 }
 
@@ -164,6 +167,12 @@ export function selectAssignment(studentAssignmentId) {
   return {
     type: "SELECT_ASSIGNMENT",
     payload: studentAssignmentId
+  }
+};
+
+export function deselectAssignment() {
+  return {
+    type: "DESELECT_ASSIGNMENT"
   }
 };
 

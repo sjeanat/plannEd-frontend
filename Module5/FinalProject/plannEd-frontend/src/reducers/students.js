@@ -29,7 +29,11 @@ export default function studentReducer(
       selectedSEM: null,
       selectedTA: null
     },
-    selectedAssignment: {},
+    selectedAssignment: {
+      id: null,
+      subAssignments: [],
+      firstChild: true
+    },
     loading: false
   }, action) {
   switch (action.type) {
@@ -108,16 +112,20 @@ export default function studentReducer(
         loading: false
       };
     case "FETCHED_SUB_ASSIGNMENTS": //will need work here
+      console.log("fetched_sub_assignments")
       const withUpdatedSubAssignment = state.studentAssignments.data.map(studentAssignment => {
-        if (studentAssignment.studentAssignmentId === action.payload.parentAssignmentId) {
-          return {
+        let updated;
+        if (studentAssignment.studentAssignmentId === parseInt(action.payload.parentAssignmentId)) {
+          updated = {
             ...studentAssignment,
-            subAssignmnets: action.payload.subAssignments
+            subAssignments: action.payload.subAssignments
           };
         } else {
-          return studentAssignment
+          updated = studentAssignment
         }
+        return updated;
       });
+      console.log("with updated sub assignment", withUpdatedSubAssignment)
       return {
         ...state,
         studentAssignments: {
@@ -173,14 +181,23 @@ export default function studentReducer(
         },
         loading: false
       };
-    case "SELECT_ASSIGNMENT": //will need to re-examine
-      const selectedAssignment = state.studentAssignments.data.filter(studentAssignment => {
-        return studentAssignment.studentAssignmentId === action.payload
-      })[0];
+    case "SELECT_ASSIGNMENT":
       return {
         ...state,
-        selectedAssignment: selectedAssignment
+        selectedAssignment: {
+          ...state.selectedAssignment,
+          id: action.payload
+        }
       };
+    case "DESELECT_ASSIGNMENT":
+      return {
+        ...state,
+        selectedAssignment: {
+          id: null,
+          subAssignments: [],
+          firstChild: true
+        }
+      }
     case "SELECT_DIRECTORY_COURSE":
       return {
         ...state,
