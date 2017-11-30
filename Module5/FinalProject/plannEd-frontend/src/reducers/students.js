@@ -30,7 +30,7 @@ export default function studentReducer(
       selectedTA: null
     },
     selectedAssignment: {
-      id: null,
+      id: [],
       subAssignments: [],
       firstChild: true
     },
@@ -111,76 +111,52 @@ export default function studentReducer(
         },
         loading: false
       };
-    case "OLD_FETCHED_SUB_ASSIGNMENTS": //will need work here
-      console.log("fetched_sub_assignments")
-      const withUpdatedSubAssignment = state.studentAssignments.data.map(studentAssignment => {
-        let updated;
-        if (studentAssignment.studentAssignmentId === parseInt(action.payload.parentAssignmentId)) {
-          updated = {
-            ...studentAssignment,
-            subAssignments: action.payload.subAssignments
-          };
-        } else {
-          updated = studentAssignment
-        }
-        return updated;
-      });
-      console.log("with updated sub assignment", withUpdatedSubAssignment)
-      return {
-        ...state,
-        studentAssignments: {
-          ...state.studentAssignments,
-          data: withUpdatedSubAssignment
-        },
-        loading: false
-      };
     case "FETCHED_SUB_ASSIGNMENTS":
-      console.log("fetched_sub_assignments:", action.payload.subAssignments)
-      const parentId = action.payload.parentAssignmentId;
+      const hasParent = action.payload.hasParent;
+      const parentId = parseInt(action.payload.parentAssignmentId, 10);
       const subAssignments = action.payload.subAssignments;
 
-
+      let fetchedIds = [];
       const newSubAssignments = subAssignments.map(subAss => {
+        fetchedIds.push(subAss.studentAssignmentId);
         return {
           id: subAss.studentAssignmentId,
-          assignment: {
-            ...subAss,
-            selectedNow: true
-          },
-          parentId: subAss.parentStudentAssignmentId
+          assignment: subAss,
+          parentId: parentId
         }
       })
+      // debugger
+      const selectedIdsWithFetched = [...state.selectedAssignment.id, fetchedIds];
+
 
       let updatedSubAssignments = [];
-      if (state.selectedAssignment.subAssignments.length === 0) {
-        console.log("selected assignment:", subAssignments[0].parentStudentAssignmentId)
+      if (!hasParent) {
+        console.log("new state selectedAssignment",{
+          ...state.selectedAssignment,
+          id: [[parentId]],
+          subAssignments: newSubAssignments
+        })
         return {
           ...state,
           selectedAssignment: {
             ...state.selectedAssignment,
-            id: subAssignments[0].parentStudentAssignmentId,
+            id: [[parentId]],
             subAssignments: newSubAssignments
           }
         }
       } else {
           state.selectedAssignment.subAssignments.forEach(subAss => {
-            console.log("subAss:", subAss)
-          if (subAss.id === parseInt(parentId)) {
-            let arr = [subAss, ...newSubAssignments];
-            updatedSubAssignments.push(subAss);
-            for (let i = 0; i < newSubAssignments.length; i++) {
-              updatedSubAssignments.push(newSubAssignments[i]);
-            }
-          } else {
-            updatedSubAssignments.push(subAss);
-          }
-        })
-        console.log("second sub assignment added")
-        console.log("updatedSubAssignments:", updatedSubAssignments)
+            if (subAss.id === parentId) {
+              updatedSubAssignments = [...updatedSubAssignments, subAss, ...newSubAssignments];
+            } else {
+              updatedSubAssignments.push(subAss);
+            };
+          });
         return {
           ...state,
           selectedAssignment: {
             ...state.selectedAssignment,
+            id: selectedIdsWithFetched,
             subAssignments: updatedSubAssignments
           }
         }
@@ -223,7 +199,6 @@ export default function studentReducer(
           return studentAssignment
         }
       });
-
       return {
         ...state,
         studentAssignments: {
@@ -232,35 +207,81 @@ export default function studentReducer(
         },
         loading: false
       };
+    case "COMPLETED_SUB_ASSIGNMENT":
+      const completedAssignment = action.payload;
+      const subAssignmentsWithComplete = state.selectedAssignment.subAssignments.map(subAss => {
+        if (subAss.id === completedAssignment.studentAssignmentId) {
+          return {
+            ...subAss,
+            assignment: {
+              ...subAss.assignment,
+              completed: completedAssignment.completed
+            }
+          }
+        } else {
+          return subAss
+        }
+      })
+      //if parent assignment is complete update parent
+      return {
+        ...state,
+        selectedAssignment: {
+          ...state.selectedAssignment,
+          subAssignments: subAssignmentsWithComplete
+        }
+      }
     case "SELECT_ASSIGNMENT":
-      console.log("select assignment:", action.payload)
+      console.log("select assignment")
       return {
         ...state,
         selectedAssignment: {
           subAssignments: [],
           firstChild: true,
-          id: { 1: action.payload }
+          id: [action.payload]
         }
       };
     case "DESELECT_ASSIGNMENT":
       return {
         ...state,
         selectedAssignment: {
-          id: null,
+          id: [],
           subAssignments: [],
           firstChild: true
         }
       }
     case "DESELECT_SUB_ASSIGNMENT":
-      let subAssignmentsLessDeselected = [];
-      let updatedIds = {};
-      let selectedIds = this.props.selectedAssignment.id
-      // for (key in selectedIds) {
-      //   //rebuild selectedIds with each loop
-      //     //stop at (and don't include) selectedIds[key] (and beyond)
-      //     //collect remaining Ids
-      // }
-      // //use remaining Ids to filter out subAssignments
+      const deselectParentId = action.payload;
+      let selectedIds = state.selectedAssignment.id;
+      let deselectIds = [];
+      let updatedIds = [];
+      //rebuild selectedIds with each loop
+      //stop at (and don't include) selectedIds[key] (and beyond)
+      //collect remaining Ids
+
+      const subAssignmentsLessDeselected = state.selectedAssignment.subAssignments.filter(subAss => {
+        if (subAss.parentId === deselectParentId) {
+          deselectIds.push(subAss.id)
+          return subAss.parentId !== deselectParentId
+        } else {
+          return subAss.parentId !== deselectParentId
+        }
+      });
+
+      let continueSearch = true;
+      selectedIds.forEach(idSet => {
+        if (continueSearch) {
+
+          idSet.forEach(id => {
+            if (deselectIds.includes(id)) {
+              continueSearch = false;
+            }
+          })
+          if (continueSearch) {
+            updatedIds.push(idSet)
+          }
+        }
+      })
+
       return {
         ...state,
         selectedAssignment: {
@@ -320,7 +341,7 @@ export default function studentReducer(
         default: break;
       };
       if (state.studentAssignments.courseFilter !== "All Courses") {
-        assignmentsDisplay = assignmentsDisplay.filter(assignment => assignment.studentCourseId === parseInt(state.studentAssignments.courseFilter));
+        assignmentsDisplay = assignmentsDisplay.filter(assignment => assignment.studentCourseId === parseInt(state.studentAssignments.courseFilter, 10));
       };
       switch (state.studentAssignments.sortBy) {
         case "Due Date":
@@ -337,7 +358,7 @@ export default function studentReducer(
         default: break;
       };
       let date = new Date();
-      const limitDate = state.studentAssignments.limit === "" ? new Date(date.setDate(date.getDate() + 10)) : new Date(date.setDate(date.getDate() + parseInt(state.studentAssignments.limit)))
+      const limitDate = state.studentAssignments.limit === "" ? new Date(date.setDate(date.getDate() + 10)) : new Date(date.setDate(date.getDate() + parseInt(state.studentAssignments.limit, 10)))
       assignmentsDisplay = assignmentsDisplay.filter(assignment => (new Date(assignment.dueDate)) < limitDate);
       //apply limit
       return {

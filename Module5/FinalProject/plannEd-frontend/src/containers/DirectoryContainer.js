@@ -23,7 +23,6 @@ class DirectoryContainer extends Component {
 
 
 function mapStateToProps(state) {
-  console.log("CourseContainer state:", state)
   return {
     student: state.student,
     studentCourses: state.studentCourses,

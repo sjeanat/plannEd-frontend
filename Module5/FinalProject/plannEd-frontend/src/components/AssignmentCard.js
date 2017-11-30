@@ -21,7 +21,7 @@ export default class AssignmentCard extends Component {
 
   showSubAssignments = () => {
     const arr = this.props.selectedAssignment.subAssignments.map((subAss, idx) => {
-      return <SubAssignmentCard key={idx} assignment={subAss.assignment} parentId={subAss.parentId} onFetchSubAssignments={this.props.onFetchSubAssignments} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
+      return <SubAssignmentCard key={idx} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignment={subAss.assignment} parentId={subAss.parentId} onFetchSubAssignments={this.props.onFetchSubAssignments} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
     })
     return arr;
     // console.log("first sub assignments props.assignment:", this.props.assignment) //LEFT OFF HERE!!
@@ -39,7 +39,6 @@ export default class AssignmentCard extends Component {
   };
 
   render() {
-    console.log("assignment selected?", this.props.selectedAssignment, this.props.assignment.studentAssignmentId)
     return (
       <div>
         <h2>{this.props.assignment.title}</h2>
@@ -48,7 +47,9 @@ export default class AssignmentCard extends Component {
         {this.props.assignment.hasSubAssignments
           ?
             <div>
-              {(this.props.selectedAssignment && this.props.selectedAssignment.id[1] === this.props.assignment.studentAssignmentId)
+
+              <p>{this.props.assignment.completed ? "Completed!" : "Incomplete. Finish Sub-Assignments"}</p>
+              {(this.props.selectedAssignment.id.length > 0 && this.props.selectedAssignment.id[0][0] === this.props.assignment.studentAssignmentId)
                 ?
                   <div>
                     <button onClick={this.handleDeselectAssignment}>Hide Sub-Assignments</button>

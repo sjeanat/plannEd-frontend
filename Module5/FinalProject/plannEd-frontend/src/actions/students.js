@@ -105,7 +105,8 @@ export function fetchSubAssignments(studentAssignmentId) { // CHECKED
       .then(data => {
         dispatch({ type: "FETCHED_SUB_ASSIGNMENTS", payload: {
           parentAssignmentId: data.parentAssignmentId,
-          subAssignments: data.subAssignments
+          subAssignments: data.subAssignments,
+          hasParent: data.hasParent
         }})
         dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
     });
@@ -159,6 +160,25 @@ export function completeAssignment(studentAssignmentId) { // CHECKED
       .then(resp => resp.json())
       .then(json => {
         dispatch({ type: "COMPLETED_ASSIGNMENT", payload: json.studentAssignment })
+        dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
+      })
+  };
+};
+
+export function completeSubAssignment(studentAssignmentId) { // CHECKED
+  return (dispatch) => {
+    dispatch({ type: "LOADING" });
+    return fetch("http://localhost:3000/api/v1/students/complete_assignment", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ studentAssignmentId })
+    })
+      .then(resp => resp.json())
+      .then(json => {
+        dispatch({ type: "COMPLETED_SUB_ASSIGNMENT", payload: json.studentAssignment })
         dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
       })
   };

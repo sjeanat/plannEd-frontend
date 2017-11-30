@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchAssignments, fetchSubAssignments, completeAssignment, selectAssignment, deselectAssignment, changeAssignmentsDisplay, deselectSubAssignment } from '../actions/students';
+import { fetchAssignments, fetchSubAssignments, completeAssignment, completeSubAssignment, selectAssignment, deselectAssignment, deselectSubAssignment } from '../actions/students';
 import AssignmentSearchForm from '../components/AssignmentSearchForm';
 import AssignmentList from '../components/AssignmentList';
 
@@ -17,7 +17,7 @@ class AssignmentContainer extends Component {
           ?
             <div className="assignment-container">
               <AssignmentSearchForm courses={this.props.studentCourses} assignments={this.props.studentAssignments}/>
-              <AssignmentList selectedAssignment={this.props.selectedAssignment} assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.onDeselectAssignment}/>
+              <AssignmentList onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.onDeselectAssignment} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
             </div>
           :
             null
@@ -29,7 +29,6 @@ class AssignmentContainer extends Component {
 
 
 function mapStateToProps(state) {
-  console.log("AssignmentContainer state:", state)
   return {
     student: state.student,
     studentCourses: state.studentCourses,
@@ -46,6 +45,9 @@ function mapDispatchToProps(dispatch) {
     onCompleteAssignment: (studentAssignmentId) => {
       dispatch(completeAssignment(studentAssignmentId));
     },
+    onCompleteSubAssignment: (studentAssignmentId) => {
+      dispatch(completeSubAssignment(studentAssignmentId));
+    },
     onSelectAssignment: (studentAssignmentId) => {
       dispatch(selectAssignment(studentAssignmentId));
     },
@@ -56,7 +58,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(fetchSubAssignments(studentAssignmentId));
     },
     onDeselectSubAssignment: (studentAssignmentId) => {
-      dispatch(deselectSubAssignment());
+      dispatch(deselectSubAssignment(studentAssignmentId));
     }
   }
 };

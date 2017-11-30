@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { changeAssignmentsDisplay, sortBy, sortDirection, limitChange, filterByCourse, filterByCompleted, removeCompletedFilter, filterByIncomplete, filterByDueDate } from '../actions/students';
+import { changeAssignmentsDisplay, sortBy, sortDirection, limitChange, filterByCourse, filterByCompleted, removeCompletedFilter, filterByIncomplete } from '../actions/students';
 
 class AssignmentSearchForm extends Component {
 

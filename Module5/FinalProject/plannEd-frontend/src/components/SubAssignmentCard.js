@@ -10,18 +10,38 @@ export default class SubAssignmentCard extends Component {
   //   };
   // };
 
+  handleComplete = () => {
+    this.props.onCompleteSubAssignment(this.props.assignment.studentAssignmentId);
+  };
+
   handleSubAssignments = () => {
     this.props.onFetchSubAssignments(this.props.assignment.studentAssignmentId);
+    //dont forget to edit FetchSubAssignments reducer case s.t. it formats selectedAssignment.id properly
   };
 
   handleDeselectSubAssignment = () => {
     this.props.onDeselectSubAssignment(this.props.assignment.studentAssignmentId);
   };
 
-  render() {
-    console.log("SubAssignmentCard render")
+  areChildrenVisible = (haystack, arr) => {
+    return arr.some(function (v) {
+        return haystack.indexOf(v) >= 0;
+    })
+  };
 
-    const selectedNow = for this.props.selectedAssignment.id
+  render() {
+    // let selectedIds = [];
+    // this.props.selectedAssignment.id.forEach(idSet => {
+    //   selectedIds = [...selectedIds, ...idSet]
+    // });
+    // let childrenIds = [];
+    let show = false;
+    this.props.selectedAssignment.subAssignments.forEach(subAss => {
+      if (subAss.parentId === this.props.assignment.studentAssignmentId) {
+        show = true;
+      }
+    });
+
     return (
       <div className="sub-assignment-card">
         <h2>{this.props.assignment.title}</h2>
@@ -30,7 +50,8 @@ export default class SubAssignmentCard extends Component {
         {this.props.assignment.hasSubAssignments
           ?
             <div>
-              {this.props.assignment.selectedNow
+              <p>{this.props.assignment.completed ? "Completed!" : "Incomplete. Finish Sub-Assignments"}</p>
+              {show
                 ?
                   <button onClick={this.handleDeselectSubAssignment}>Hide Sub-Assignments</button>
                 :
