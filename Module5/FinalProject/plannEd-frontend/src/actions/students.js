@@ -92,7 +92,6 @@ export function addCourse(student, studentCourse, instructors) {
     })
     .then(resp => resp.json())
     .then(data => {
-      console.log("added course")
       dispatch({ type: 'ADDED_COURSE', payload: { studentCourse: data.studentCourse, studentAssignments: data.studentAssignments }})
     });
   };
@@ -105,8 +104,8 @@ export function fetchSubAssignments(studentAssignmentId) { // CHECKED
       .then(resp => resp.json())
       .then(data => {
         dispatch({ type: "FETCHED_SUB_ASSIGNMENTS", payload: {
-        parentAssignmentId: data.parentAssignmentId,
-        subAssignments: data.subAssignments
+          parentAssignmentId: data.parentAssignmentId,
+          subAssignments: data.subAssignments
         }})
         dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
     });
@@ -118,7 +117,6 @@ export function fetchAssignments(studentId) { // CHECKED
     return fetch(`http://localhost:3000/api/v1/students/student_assignments?studentId=${studentId}`)
     .then(resp => resp.json())
     .then(data => {
-      console.log("fetched assignments")
       dispatch({ type: "FETCHED_ASSIGNMENTS", payload: data.studentAssignments })
       dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
     });
@@ -130,7 +128,6 @@ export function fetchAssignments(studentId) { // CHECKED
 export function fetchDirectorySubjects(semester) { // CHECKED
   return (dispatch) => {
     dispatch({ type: "LOADING" });
-    console.log("fetch directory subjects")
     return fetch(`https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${semester}`)
 	    .then(resp => resp.json())
 	    .then(json => {
@@ -177,6 +174,13 @@ export function selectAssignment(studentAssignmentId) {
 export function deselectAssignment() {
   return {
     type: "DESELECT_ASSIGNMENT"
+  }
+};
+
+export function deselectSubAssignment(studentAssignmentId) {
+  return {
+    type: "DESELECT_SUB_ASSIGNMENT",
+    payload: studentAssignmentId
   }
 };
 

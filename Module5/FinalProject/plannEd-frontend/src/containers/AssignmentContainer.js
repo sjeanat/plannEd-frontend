@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchAssignments, fetchSubAssignments, completeAssignment, selectAssignment, deselectAssignment, changeAssignmentsDisplay } from '../actions/students';
+import { fetchAssignments, fetchSubAssignments, completeAssignment, selectAssignment, deselectAssignment, changeAssignmentsDisplay, deselectSubAssignment } from '../actions/students';
 import AssignmentSearchForm from '../components/AssignmentSearchForm';
 import AssignmentList from '../components/AssignmentList';
 
@@ -17,7 +17,7 @@ class AssignmentContainer extends Component {
           ?
             <div className="assignment-container">
               <AssignmentSearchForm courses={this.props.studentCourses} assignments={this.props.studentAssignments}/>
-              <AssignmentList assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.deselectAssignment}/>
+              <AssignmentList selectedAssignment={this.props.selectedAssignment} assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.onDeselectAssignment}/>
             </div>
           :
             null
@@ -29,7 +29,7 @@ class AssignmentContainer extends Component {
 
 
 function mapStateToProps(state) {
-  console.log("assignment container state", state)
+  console.log("AssignmentContainer state:", state)
   return {
     student: state.student,
     studentCourses: state.studentCourses,
@@ -54,6 +54,9 @@ function mapDispatchToProps(dispatch) {
     },
     onFetchSubAssignments: (studentAssignmentId) => {
       dispatch(fetchSubAssignments(studentAssignmentId));
+    },
+    onDeselectSubAssignment: (studentAssignmentId) => {
+      dispatch(deselectSubAssignment());
     }
   }
 };

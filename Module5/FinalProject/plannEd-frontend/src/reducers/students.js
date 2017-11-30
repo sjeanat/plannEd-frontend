@@ -111,7 +111,7 @@ export default function studentReducer(
         },
         loading: false
       };
-    case "FETCHED_SUB_ASSIGNMENTS": //will need work here
+    case "OLD_FETCHED_SUB_ASSIGNMENTS": //will need work here
       console.log("fetched_sub_assignments")
       const withUpdatedSubAssignment = state.studentAssignments.data.map(studentAssignment => {
         let updated;
@@ -134,6 +134,57 @@ export default function studentReducer(
         },
         loading: false
       };
+    case "FETCHED_SUB_ASSIGNMENTS":
+      console.log("fetched_sub_assignments:", action.payload.subAssignments)
+      const parentId = action.payload.parentAssignmentId;
+      const subAssignments = action.payload.subAssignments;
+
+
+      const newSubAssignments = subAssignments.map(subAss => {
+        return {
+          id: subAss.studentAssignmentId,
+          assignment: {
+            ...subAss,
+            selectedNow: true
+          },
+          parentId: subAss.parentStudentAssignmentId
+        }
+      })
+
+      let updatedSubAssignments = [];
+      if (state.selectedAssignment.subAssignments.length === 0) {
+        console.log("selected assignment:", subAssignments[0].parentStudentAssignmentId)
+        return {
+          ...state,
+          selectedAssignment: {
+            ...state.selectedAssignment,
+            id: subAssignments[0].parentStudentAssignmentId,
+            subAssignments: newSubAssignments
+          }
+        }
+      } else {
+          state.selectedAssignment.subAssignments.forEach(subAss => {
+            console.log("subAss:", subAss)
+          if (subAss.id === parseInt(parentId)) {
+            let arr = [subAss, ...newSubAssignments];
+            updatedSubAssignments.push(subAss);
+            for (let i = 0; i < newSubAssignments.length; i++) {
+              updatedSubAssignments.push(newSubAssignments[i]);
+            }
+          } else {
+            updatedSubAssignments.push(subAss);
+          }
+        })
+        console.log("second sub assignment added")
+        console.log("updatedSubAssignments:", updatedSubAssignments)
+        return {
+          ...state,
+          selectedAssignment: {
+            ...state.selectedAssignment,
+            subAssignments: updatedSubAssignments
+          }
+        }
+      }
     case "FETCHED_DIRECTORY_COURSES":
       return {
         ...state,
@@ -182,11 +233,13 @@ export default function studentReducer(
         loading: false
       };
     case "SELECT_ASSIGNMENT":
+      console.log("select assignment:", action.payload)
       return {
         ...state,
         selectedAssignment: {
-          ...state.selectedAssignment,
-          id: action.payload
+          subAssignments: [],
+          firstChild: true,
+          id: { 1: action.payload }
         }
       };
     case "DESELECT_ASSIGNMENT":
@@ -196,6 +249,24 @@ export default function studentReducer(
           id: null,
           subAssignments: [],
           firstChild: true
+        }
+      }
+    case "DESELECT_SUB_ASSIGNMENT":
+      let subAssignmentsLessDeselected = [];
+      let updatedIds = {};
+      let selectedIds = this.props.selectedAssignment.id
+      // for (key in selectedIds) {
+      //   //rebuild selectedIds with each loop
+      //     //stop at (and don't include) selectedIds[key] (and beyond)
+      //     //collect remaining Ids
+      // }
+      // //use remaining Ids to filter out subAssignments
+      return {
+        ...state,
+        selectedAssignment: {
+          ...state.selectedAssignment,
+          id: updatedIds,
+          subAssignments: subAssignmentsLessDeselected
         }
       }
     case "SELECT_DIRECTORY_COURSE":

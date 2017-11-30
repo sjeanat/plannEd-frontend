@@ -3,37 +3,43 @@ import SubAssignmentCard from './SubAssignmentCard';
 
 export default class AssignmentCard extends Component {
 
-  componentDidMount() {
-    console.log("assignment card CDM, assignment:", this.props.assignment)
-    this.props.assignment.hasSubAssignments ? this.props.onFetchSubAssignments(this.props.assignment.studentAssignmentId) : null;
-  };
-
   handleComplete = () => {
     this.props.onCompleteAssignment(this.props.assignment.studentAssignmentId);
   };
 
   handleSelectAssignment = () => {
-    this.props.onSelectAssignment(this.props.assignment.studentAssignmentId);
-    this.showFirstSubAssignments();
+    this.props.onFetchSubAssignments(this.props.assignment.studentAssignmentId, true)
   };
 
   handleDeselectAssignment = () => {
     this.props.onDeselectAssignment();
   };
 
-  addSubAssignments = () => {
+  addSubAssignments = (newSubs, parentId) => {
 
   };
 
   showSubAssignments = () => {
-    console.log("show sub assignments")
-  };
-
-  showFirstSubAssignments = () => {
-    console.log("first sub assignments", this.props.assignment) //LEFT OFF HERE!!
+    const arr = this.props.selectedAssignment.subAssignments.map((subAss, idx) => {
+      return <SubAssignmentCard key={idx} assignment={subAss.assignment} parentId={subAss.parentId} onFetchSubAssignments={this.props.onFetchSubAssignments} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
+    })
+    return arr;
+    // console.log("first sub assignments props.assignment:", this.props.assignment) //LEFT OFF HERE!!
+    // let obj;
+    // let arr;
+    // this.props.assignment.subAssignments.forEach(subAss => {
+    //   obj = { id: subAss.studentAssignmentId, assignment: subAss, parentId: subAss.parentStudentAssignmentId }
+    //   this.subAssignmentsArr.push(obj);
+    // });
+    // arr = this.subAssignmentsArr.map((subAss, idx) => {
+    //   console.log("sub assmignment showFirstAssignments map")
+    //   return
+    // });
+    // return arr;
   };
 
   render() {
+    console.log("assignment selected?", this.props.selectedAssignment, this.props.assignment.studentAssignmentId)
     return (
       <div>
         <h2>{this.props.assignment.title}</h2>
@@ -42,20 +48,11 @@ export default class AssignmentCard extends Component {
         {this.props.assignment.hasSubAssignments
           ?
             <div>
-              {(this.props.selectedAssignment && this.props.selectedAssignment.id === this.props.assignment.studentAssignmentId)
+              {(this.props.selectedAssignment && this.props.selectedAssignment.id[1] === this.props.assignment.studentAssignmentId)
                 ?
                   <div>
                     <button onClick={this.handleDeselectAssignment}>Hide Sub-Assignments</button>
-                    {this.props.selectedAssignment.firstChild
-                      ?
-                        <div>
-                          {this.showFirstSubAssignments()}
-                        </div>
-                      :
-                        <div>
-                          {this.showSubAssignments()}
-                        </div>
-                    }
+                    {this.showSubAssignments()}
                   </div>
                 :
                   <button onClick={this.handleSelectAssignment}>See Sub-Assignments</button>

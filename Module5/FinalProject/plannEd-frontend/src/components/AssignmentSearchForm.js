@@ -5,7 +5,6 @@ import { changeAssignmentsDisplay, sortBy, sortDirection, limitChange, filterByC
 class AssignmentSearchForm extends Component {
 
   componentDidMount() {
-    console.log("assignment search from CDM")
     this.props.onChangeAssignmentsDisplay();
   };
 
