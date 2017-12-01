@@ -102,6 +102,7 @@ export default function studentReducer(
         loading: false
       };
     case "FETCHED_ASSIGNMENTS":
+      console.log('fetched_assignments', action.payload)
       return {
         ...state,
         studentAssignments: {
