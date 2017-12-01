@@ -209,23 +209,41 @@ export default function studentReducer(
         loading: false
       };
     case "COMPLETED_SUB_ASSIGNMENT":
-      const completedAssignment = action.payload;
-      const subAssignmentsWithComplete = state.selectedAssignment.subAssignments.map(subAss => {
-        if (subAss.id === completedAssignment.studentAssignmentId) {
+      const rootAssignments = action.payload.rootAssignments;
+      const subRootAssignments = action.payload.subAssignments;
+      const ids = action.payload.ids;
+      debugger
+
+      const subAssignmentsWithComplete = state.selectedAssignment.subAssignments.map((subAss, idx) => {
+        if (ids.includes(subAss.id)) {
           return {
             ...subAss,
             assignment: {
               ...subAss.assignment,
-              completed: completedAssignment.completed
+              completed: subRootAssignments[idx].completed
             }
           }
         } else {
           return subAss
         }
       })
+      const rootAssignmentsWithComplete = state.studentAssignments.data.map((ass, idx) => {
+        if (ids.includes(ass.studentAssignmentId)) {
+          return {
+            ...ass,
+            completed: rootAssignments[idx].completed
+          }
+        } else {
+          return ass
+        }
+      })
       //if parent assignment is complete update parent
       return {
         ...state,
+        studentAssignments: {
+          ...state.studentAssignments,
+          data: rootAssignmentsWithComplete
+        },
         selectedAssignment: {
           ...state.selectedAssignment,
           subAssignments: subAssignmentsWithComplete

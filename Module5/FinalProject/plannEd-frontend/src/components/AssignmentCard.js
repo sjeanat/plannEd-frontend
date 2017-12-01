@@ -21,7 +21,7 @@ export default class AssignmentCard extends Component {
 
   showSubAssignments = () => {
     const arr = this.props.selectedAssignment.subAssignments.map((subAss, idx) => {
-      return <SubAssignmentCard key={idx} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignment={subAss.assignment} parentId={subAss.parentId} onFetchSubAssignments={this.props.onFetchSubAssignments} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
+      return <SubAssignmentCard key={idx} studentAssignments={this.props.studentAssignments} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignment={subAss.assignment} parentId={subAss.parentId} onFetchSubAssignments={this.props.onFetchSubAssignments} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
     })
     return arr;
     // console.log("first sub assignments props.assignment:", this.props.assignment) //LEFT OFF HERE!!

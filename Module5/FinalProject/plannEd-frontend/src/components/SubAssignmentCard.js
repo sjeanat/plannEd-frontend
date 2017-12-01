@@ -11,7 +11,10 @@ export default class SubAssignmentCard extends Component {
   // };
 
   handleComplete = () => {
-    this.props.onCompleteSubAssignment(this.props.assignment.studentAssignmentId);
+    const rootAssignmentIds = this.props.studentAssignments.data.map(ass => ass.studentAssignmentId); //missing StudentAssignment.data
+    const subAssignmentIds = this.props.selectedAssignment.subAssignments.map(subAss => subAss.id);
+    console.log("root ids", rootAssignmentIds, "sub ids", subAssignmentIds)
+    this.props.onCompleteSubAssignment(this.props.assignment.studentAssignmentId, rootAssignmentIds, subAssignmentIds);
   };
 
   handleSubAssignments = () => {

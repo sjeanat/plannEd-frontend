@@ -165,7 +165,7 @@ export function completeAssignment(studentAssignmentId) { // CHECKED
   };
 };
 
-export function completeSubAssignment(studentAssignmentId) { // CHECKED
+export function completeSubAssignment_VERSIONONE(studentAssignmentId) { // CHECKED
   return (dispatch) => {
     dispatch({ type: "LOADING" });
     return fetch("http://localhost:3000/api/v1/students/complete_assignment", {
@@ -183,6 +183,36 @@ export function completeSubAssignment(studentAssignmentId) { // CHECKED
       })
   };
 };
+
+export function completeSubAssignment(studentAssignmentId, rootAssignmentIds, subAssignmentIds) { // CHECKED
+  return (dispatch) => {
+    dispatch({ type: "LOADING" });
+    return fetch("http://localhost:3000/api/v1/students/complete_assignment", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ studentAssignmentId, rootAssignmentIds, subAssignmentIds, isSubAssignment: true })
+    })
+      .then(resp => resp.json())
+      .then(json => {
+        dispatch({ type: "COMPLETED_SUB_ASSIGNMENT", payload: {
+            rootAssignments: json.rootAssignments,
+            subAssignments: json.subAssignments,
+            ids: json.ids
+          }
+        })
+        dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
+      })
+  };
+};
+
+function updateVisibleAssignments() {
+  // return fetch()
+  //   .then(resp => resp.json())
+  console.log('hello')
+}
 
 export function selectAssignment(studentAssignmentId) {
   return {

@@ -17,7 +17,7 @@ class AssignmentContainer extends Component {
           ?
             <div className="assignment-container">
               <AssignmentSearchForm courses={this.props.studentCourses} assignments={this.props.studentAssignments}/>
-              <AssignmentList onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.onDeselectAssignment} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
+              <AssignmentList studentAssignments={this.props.studentAssignments} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.onDeselectAssignment} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
             </div>
           :
             null
@@ -45,8 +45,8 @@ function mapDispatchToProps(dispatch) {
     onCompleteAssignment: (studentAssignmentId) => {
       dispatch(completeAssignment(studentAssignmentId));
     },
-    onCompleteSubAssignment: (studentAssignmentId) => {
-      dispatch(completeSubAssignment(studentAssignmentId));
+    onCompleteSubAssignment: (studentAssignmentId, rootAssignmentIds, subAssignmentIds) => {
+      dispatch(completeSubAssignment(studentAssignmentId, rootAssignmentIds, subAssignmentIds));
     },
     onSelectAssignment: (studentAssignmentId) => {
       dispatch(selectAssignment(studentAssignmentId));
