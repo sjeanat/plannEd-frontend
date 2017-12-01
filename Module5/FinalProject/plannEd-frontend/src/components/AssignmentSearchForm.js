@@ -43,6 +43,10 @@ class AssignmentSearchForm extends Component {
     };
   };
 
+  handleShowAllAssignments = () => {
+
+  }
+
   render() {
     const courseOptions = this.props.courses.map((course, idx) => {
       return <option key={idx} value={course.studentCourseId}>{course.title}</option>
@@ -68,6 +72,8 @@ class AssignmentSearchForm extends Component {
           <input onClick={this.handleSortDirection} type="radio" name="sort" value="Descending"/>
           Days Limit:
           <input type="number" onChange={this.handleLimitChange}/>
+          Show SubAssignments:
+          <input type="checkbox" onChange={this.handleShowAllAssignments}/>
           <input type="submit" value="Search"/>
         </form>
       </div>

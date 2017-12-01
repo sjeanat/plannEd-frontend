@@ -23,11 +23,11 @@ export default class SubAssignmentCard extends Component {
     this.props.onDeselectSubAssignment(this.props.assignment.studentAssignmentId);
   };
 
-  areChildrenVisible = (haystack, arr) => {
-    return arr.some(function (v) {
-        return haystack.indexOf(v) >= 0;
-    })
-  };
+  // areChildrenVisible = (haystack, arr) => {
+  //   return arr.some(function (v) {
+  //       return haystack.indexOf(v) >= 0;
+  //   })
+  // };
 
   render() {
     // let selectedIds = [];
@@ -65,3 +65,28 @@ export default class SubAssignmentCard extends Component {
     );
   };
 };
+
+// a3a = { subass: [], completed: true }
+// a3b = { subass: [], completed: true }
+// a3c = { subass: [], completed: true }
+// a3 = { subass: [a3a, a3b, a3c], completed: true }
+// a2 = { subass: [], completed: true }
+// a1 = { subass: [], completed: true }
+// c = { subass: [], completed: true }
+// b = { subass: [], completed: true }
+// a = { subass: [a1, a2, a3], completed: true }
+// root = { subass: [a, b, c], completed: false }
+// function checkSubAssignmentTree(node, numChildren) {
+//   for (let idx = 0; idx < node.subass.length; idx++) {
+//     console.log(node);
+//     if (!checkSubAssignmentTree(node.subass[idx], 0)) {
+//       return false
+//     }
+//     if ((idx + 1) === numChildren) {
+//       return true
+//     }
+//   }
+//   return (!node.completed) ? false : true
+// }
+//
+// checkSubAssignmentTree(root, 3)
