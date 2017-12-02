@@ -93,6 +93,7 @@ export default function studentReducer(
         }
       };
     case "ADDED_COURSE":
+      const newCourse = action.payload.studentCourse;
       let updatedCourses = [];
       //format calendar data
       // const newCourse = action.payload.studentCourse
