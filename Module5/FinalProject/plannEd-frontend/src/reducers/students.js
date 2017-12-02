@@ -93,6 +93,7 @@ export default function studentReducer(
         }
       };
     case "ADDED_COURSE":
+      let updatedCourses = [];
       //format calendar data
       // const newCourse = action.payload.studentCourse
       // const dates = newCourse.pattern.split("").map(day => {
@@ -104,7 +105,7 @@ export default function studentReducer(
         calendar: {
           ...state.calendar,
           courses: updatedCourses
-        }
+        },
         studentCourses: [...state.studentCourses, newCourse],
         studentAssignments: {
           ...state.studentAssignments,
