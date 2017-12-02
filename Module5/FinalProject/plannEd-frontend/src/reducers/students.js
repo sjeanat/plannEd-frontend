@@ -20,6 +20,8 @@ export default function studentReducer(
       limit: "",
       display: []
     },
+    upcomingAssignments: [],
+    upcomingLimit: 10,
     selectedSemester: "",
     selectedSubject: "",
     selectedCourse: {
@@ -212,7 +214,6 @@ export default function studentReducer(
       const rootAssignments = action.payload.rootAssignments;
       const subRootAssignments = action.payload.subAssignments;
       const ids = action.payload.ids;
-      debugger
 
       const subAssignmentsWithComplete = state.selectedAssignment.subAssignments.map((subAss, idx) => {
         if (ids.includes(subAss.id)) {
@@ -247,6 +248,43 @@ export default function studentReducer(
         selectedAssignment: {
           ...state.selectedAssignment,
           subAssignments: subAssignmentsWithComplete
+        }
+      }
+    case "COMPLETED_PARENT":
+      const withChildrenIds = action.payload.ids;
+      const completed = action.payload.completed;
+      const rootAssignmentsWithCompletedParent = state.studentAssignments.data.map(ass => {
+        if (withChildrenIds.includes(ass.studentAssignmentId)) {
+          return {
+            ...ass,
+            completed: completed
+          }
+        } else {
+          return ass
+        }
+      });
+      const subAssignmentsWithCompletedParent = state.selectedAssignment.subAssignments.map(ass => {
+        if (withChildrenIds.includes(ass.id)) {
+          return {
+            ...ass,
+            assignment: {
+              ...ass.assignment,
+              completed: completed
+            }
+          }
+        } else {
+          return ass
+        }
+      });
+      return {
+        ...state,
+        studentAssignments: {
+          ...state.studentAssignments,
+          data: rootAssignmentsWithCompletedParent
+        },
+        selectedAssignment: {
+          ...state.selectedAssignment,
+          subAssignments: subAssignmentsWithCompletedParent
         }
       }
     case "SELECT_ASSIGNMENT":

@@ -1,0 +1,10 @@
+.dashboard-calendar {
+  height: 700px;
+  width: 100%;
+  margin: auto;
+  text-align: center;
+}
+
+.rbc-calendar {
+  display: inline-block;
+}

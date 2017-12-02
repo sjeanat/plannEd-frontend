@@ -18,7 +18,7 @@ class NavBar extends Component {
           {this.props.studentId
             ?
               <div>
-                <li className="navlink" ><NavLink to="/assignments" exact>Assignments</NavLink></li>
+                <li className="navlink" ><NavLink to="/dashboard" exact>Dashboard</NavLink></li>
                 <li className="navlink" ><NavLink to="/course-directory" exact>Course Directory</NavLink></li>
                 <li className="navlink" onClick={this.handleSignOut}><NavLink to="/home" exact>Sign Out</NavLink></li>
               </div>

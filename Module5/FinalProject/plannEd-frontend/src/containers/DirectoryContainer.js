@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 import DirectorySearchForm from '../components/DirectorySearchForm';
 import DirectoryCourses from '../components/DirectoryCourses';
@@ -15,7 +16,7 @@ class DirectoryContainer extends Component {
       )
     } else {
       return (
-        <div/>
+        <Redirect to="/home"/>
       )
     }
   };

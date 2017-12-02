@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
-import { fetchAssignments, fetchSubAssignments, completeAssignment, completeSubAssignment, selectAssignment, deselectAssignment, deselectSubAssignment } from '../actions/students';
+import { completeParent, fetchAssignments, fetchSubAssignments, completeAssignment, completeSubAssignment, selectAssignment, deselectAssignment, deselectSubAssignment } from '../actions/students';
 import AssignmentSearchForm from '../components/AssignmentSearchForm';
 import AssignmentList from '../components/AssignmentList';
 
@@ -17,10 +18,10 @@ class AssignmentContainer extends Component {
           ?
             <div className="assignment-container">
               <AssignmentSearchForm courses={this.props.studentCourses} assignments={this.props.studentAssignments}/>
-              <AssignmentList studentAssignments={this.props.studentAssignments} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.onDeselectAssignment} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
+              <AssignmentList onCompleteParent={this.props.onCompleteParent} studentAssignments={this.props.studentAssignments} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.onDeselectAssignment} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
             </div>
           :
-            null
+            <Redirect to="/home"/>
         }
       </div>
     );
@@ -47,6 +48,9 @@ function mapDispatchToProps(dispatch) {
     },
     onCompleteSubAssignment: (studentAssignmentId, rootAssignmentIds, subAssignmentIds) => {
       dispatch(completeSubAssignment(studentAssignmentId, rootAssignmentIds, subAssignmentIds));
+    },
+    onCompleteParent: (studentAssignmentId) => {
+      dispatch(completeParent(studentAssignmentId));
     },
     onSelectAssignment: (studentAssignmentId) => {
       dispatch(selectAssignment(studentAssignmentId));
