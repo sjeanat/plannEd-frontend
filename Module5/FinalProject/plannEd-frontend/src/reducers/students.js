@@ -1,5 +1,10 @@
 export default function studentReducer(
   state = {
+    calendar: {
+      courses: [],
+      toDoItems: [],
+      selectedEvent: {}
+    },
     directory: {
       subjects: [],
       courses: []
@@ -88,9 +93,19 @@ export default function studentReducer(
         }
       };
     case "ADDED_COURSE":
+      //format calendar data
+      // const newCourse = action.payload.studentCourse
+      // const dates = newCourse.pattern.split("").map(day => {
+      //
+      // })
+
       return {
         ...state,
-        studentCourses: [...state.studentCourses, action.payload.studentCourse],
+        calendar: {
+          ...state.calendar,
+          courses: updatedCourses
+        }
+        studentCourses: [...state.studentCourses, newCourse],
         studentAssignments: {
           ...state.studentAssignments,
           data: [...state.studentAssignments.data, ...action.payload.studentAssignments]

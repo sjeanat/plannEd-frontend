@@ -12,20 +12,20 @@ class DashboardContainer extends Component {
   }
 
   setStartTime(field) {
-
+    console.log(field.value)
   }
 
   setEndTime(field) {
-
+    console.log(field.value)
   }
 
   render() {
-    const props = {slotSelected: this.slotSelected, setStartTime: this.setStartTime, setEndTime: this.setEndTime }
+    const calProps = {slotSelected: this.slotSelected, setStartTime: this.setStartTime, setEndTime: this.setEndTime }
     console.log("upcoming assignments", this.props.upcomingAssignments)
     return (
       <div>
         {this.props.student.id ? <AssignmentContainer /> : <Redirect to="/home"/>}
-        {this.props.student.id ? <DashboardCalendar {...props}/> : <Redirect to="/home"/> }
+        {this.props.student.id ? <DashboardCalendar {...calProps}/> : <Redirect to="/home"/> }
       </div>
     );
   };

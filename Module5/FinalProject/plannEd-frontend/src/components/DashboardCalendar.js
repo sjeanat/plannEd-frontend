@@ -6,36 +6,36 @@ import './DashboardCalendarStyles.css';
 
 // Setup the localizer by providing the moment (or globalize) Object
 // to the correct localizer.
-BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
+ // or globalizeLocalizer
 
 export default class DashboardCalendar extends Component {
   render() {
-    const myEventsList = [
-      {
-        'title': 'All Day Event very long title',
-        'allDay': true,
-        'start': new Date(2017, 12, 0),
-        'end': new Date(2017, 12, 1)
-      },
-      {
-        'title': 'All another Event very long title',
-        'allDay': true,
-        'start': new Date(2017, 1, 12),
-        'end': new Date(2017, 1, 14)
-      }
-    ]
-    let allViews = Object.keys(BigCalendar.Views).map(k => BigCalendar.Views[k])
+    BigCalendar.momentLocalizer(moment);
+    const allViews = Object.keys(BigCalendar.Views).map(k => BigCalendar.Views[k])
+
     return (
       <div className="dashboard-calendar">
         <BigCalendar
-          events={myEventsList}
+          events={[]}
           startAccessor='startDate'
           endAccessor='endDate'
           selectable={true}
+          step={60}
           onSelectSlot={this.props.slotSelected}
+          views={allViews}
+          defaultDate={new Date(2017, 3, 4)}
         />
       </div>
     )
   }
 
 }
+
+//
+// event format:
+// {
+//   'title': 'All day very long',
+//   'allDay': true,
+//   'startDate': new Date(2017, 3, 0),
+//   'endDate':  new Date(2017, 3, 1)
+// }
