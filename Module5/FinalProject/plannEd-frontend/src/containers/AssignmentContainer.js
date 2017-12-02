@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
-import { completeParent, fetchAssignments, fetchSubAssignments, completeAssignment, completeSubAssignment, selectAssignment, deselectAssignment, deselectSubAssignment } from '../actions/students';
+import { fetchAssignments } from '../actions/students';
 import AssignmentSearchForm from '../components/AssignmentSearchForm';
 import AssignmentList from '../components/AssignmentList';
 
@@ -18,7 +18,7 @@ class AssignmentContainer extends Component {
           ?
             <div className="assignment-container">
               <AssignmentSearchForm courses={this.props.studentCourses} assignments={this.props.studentAssignments}/>
-              <AssignmentList onCompleteParent={this.props.onCompleteParent} studentAssignments={this.props.studentAssignments} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.onDeselectAssignment} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
+              <AssignmentList assignments={this.props.studentAssignments.display}/>
             </div>
           :
             <Redirect to="/home"/>
@@ -33,8 +33,7 @@ function mapStateToProps(state) {
   return {
     student: state.student,
     studentCourses: state.studentCourses,
-    studentAssignments: state.studentAssignments,
-    selectedAssignment: state.selectedAssignment
+    studentAssignments: state.studentAssignments
   };
 };
 
@@ -42,27 +41,6 @@ function mapDispatchToProps(dispatch) {
   return {
     onFetchAssignments: (studentId) => {
       dispatch(fetchAssignments(studentId));
-    },
-    onCompleteAssignment: (studentAssignmentId) => {
-      dispatch(completeAssignment(studentAssignmentId));
-    },
-    onCompleteSubAssignment: (studentAssignmentId, rootAssignmentIds, subAssignmentIds) => {
-      dispatch(completeSubAssignment(studentAssignmentId, rootAssignmentIds, subAssignmentIds));
-    },
-    onCompleteParent: (studentAssignmentId) => {
-      dispatch(completeParent(studentAssignmentId));
-    },
-    onSelectAssignment: (studentAssignmentId) => {
-      dispatch(selectAssignment(studentAssignmentId));
-    },
-    onDeselectAssignment: () => {
-      dispatch(deselectAssignment());
-    },
-    onFetchSubAssignments: (studentAssignmentId) => {
-      dispatch(fetchSubAssignments(studentAssignmentId));
-    },
-    onDeselectSubAssignment: (studentAssignmentId) => {
-      dispatch(deselectSubAssignment(studentAssignmentId));
     }
   }
 };

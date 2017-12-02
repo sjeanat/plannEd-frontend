@@ -310,3 +310,10 @@ export function changeAssignmentsDisplay() {
     type: "CHANGE_ASSIGNMENTS_DISPLAY"
   }
 };
+
+export function selectForToDo(assignment) {
+  return {
+    type: "SELECT_FOR_TO_DO",
+    payload: assignment
+  }
+}

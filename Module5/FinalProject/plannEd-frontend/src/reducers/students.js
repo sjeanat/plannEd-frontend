@@ -31,6 +31,7 @@ export default function studentReducer(
       selectedSEM: null,
       selectedTA: null
     },
+    selectedForTodo: {},
     selectedAssignment: {
       id: [],
       subAssignments: [],
@@ -480,6 +481,12 @@ export default function studentReducer(
           ...state.studentAssignments,
           limit: action.payload
         }
+      }
+    case "SELECT_FOR_TO_DO":
+      console.log("selected for to do:", action.payload)
+      return {
+        ...state,
+        selectedForToDo: action.payload
       }
     default:
       return state;

@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import SubAssignmentCard from './SubAssignmentCard';
+import { selectForToDo, completeParent, fetchAssignments, fetchSubAssignments, completeAssignment, completeSubAssignment, selectAssignment, deselectAssignment, deselectSubAssignment } from '../actions/students';
 
-export default class AssignmentCard extends Component {
+
+class AssignmentCard extends Component {
 
   handleParentComplete = () => {
     this.props.onCompleteParent(this.props.assignment.studentAssignmentId)
@@ -21,9 +24,13 @@ export default class AssignmentCard extends Component {
 
   showSubAssignments = () => {
     const arr = this.props.selectedAssignment.subAssignments.map((subAss, idx) => {
-      return <SubAssignmentCard key={idx} onCompleteParent={this.props.onCompleteParent} studentAssignments={this.props.studentAssignments} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignment={subAss.assignment} parentId={subAss.parentId} onFetchSubAssignments={this.props.onFetchSubAssignments} onDeselectSubAssignment={this.props.onDeselectSubAssignment}/>
+      return <SubAssignmentCard key={idx} {...this.props}/>
     });
     return arr;
+  };
+
+  handleAddToDo = () => {
+    this.props.onSelectForToDo(this.props.assignment)
   };
 
   render() {
@@ -32,6 +39,7 @@ export default class AssignmentCard extends Component {
         <h2>{this.props.assignment.title}</h2>
         <p>{this.props.assignment.dueDate}</p>
         <p>{this.props.assignment.description}</p>
+        <button onClick={this.handleAddToDo}>{this.props.selectedForToDo && this.props.selectedForToDo.studentAssignmentId === this.props.assignment.studentAssignmentId ? "Add To Calendar" : "+ To Do"}</button>
         {this.props.assignment.hasSubAssignments
           ?
             <div>
@@ -55,5 +63,52 @@ export default class AssignmentCard extends Component {
     );
   };
 };
-//WILL NEED TO DISPLAY COMPLETE IF HAS SUB ASSIGNMENTS & ALL Complete
-  //might need to create another attribute when retrieving from backend
+
+function mapStateToProps(state) {
+  return {
+    student: state.student,
+    studentCourses: state.studentCourses,
+    studentAssignments: state.studentAssignments,
+    selectedAssignment: state.selectedAssignment,
+    selectedForToDo: state.selectedForToDo
+  };
+};
+
+function mapDispatchToProps(dispatch) {
+  return {
+    onCompleteAssignment: (studentAssignmentId) => {
+      dispatch(completeAssignment(studentAssignmentId));
+    },
+    onCompleteSubAssignment: (studentAssignmentId, rootAssignmentIds, subAssignmentIds) => {
+      dispatch(completeSubAssignment(studentAssignmentId, rootAssignmentIds, subAssignmentIds));
+    },
+    onCompleteParent: (studentAssignmentId) => {
+      dispatch(completeParent(studentAssignmentId));
+    },
+    onSelectAssignment: (studentAssignmentId) => {
+      dispatch(selectAssignment(studentAssignmentId));
+    },
+    onDeselectAssignment: () => {
+      dispatch(deselectAssignment());
+    },
+    onFetchSubAssignments: (studentAssignmentId) => {
+      dispatch(fetchSubAssignments(studentAssignmentId));
+    },
+    onDeselectSubAssignment: (studentAssignmentId) => {
+      dispatch(deselectSubAssignment(studentAssignmentId));
+    },
+    onSelectForToDo: (studentAssignment) => {
+      dispatch(selectForToDo(studentAssignment));
+    }
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AssignmentCard);
+
+// //for sub assignments
+// selectedForToDo={this.props.selectedForToDo} onSelectForToDo={this.props.onSelectForToDo} onCompleteParent={this.props.onCompleteParent} studentAssignments={this.props.studentAssignments} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignment={subAss.assignment} parentId={subAss.parentId} onFetchSubAssignments={this.props.onFetchSubAssignments} onDeselectSubAssignment={this.props.onDeselectSubAssignment}
+//
+//
+// //for both
+// selectedForToDo
+// onSelectForToDo={this.props.onSelectForToDo} onCompleteParent={this.props.onCompleteParent} studentAssignments={this.props.studentAssignments} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.onDeselectAssignment} onDeselectSubAssignment={this.props.onDeselectSubAssignment}
