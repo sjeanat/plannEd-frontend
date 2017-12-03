@@ -32,7 +32,6 @@ export default class SubAssignmentCard extends Component {
         show = true;
       }
     });
-    console.log("subassignment:", this.props.assignment)
 
     return (
       <div className="sub-assignment-card">

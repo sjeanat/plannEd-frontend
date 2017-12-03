@@ -232,9 +232,10 @@ export default function studentReducer(
         loading: false
       };
     case "FETCHED_ASSIGNMENTS":
-      console.log('fetched_assignments', action.payload)
+      console.log('fetched_assignments payload:', action.payload)
       const fetchedAssignments = action.payload.studentAssignments;
       const fetchedDueDates = action.payload.dueDates;
+      const fetchedCourseDates = action.payload.courseDates;
       return {
         ...state,
         studentAssignments: {
@@ -244,7 +245,7 @@ export default function studentReducer(
         },
         calendar: {
           ...state.calendar,
-          courses: [],
+          courses: fetchedCourseDates,
           dueDates: fetchedDueDates
         },
         loading: false
@@ -265,7 +266,6 @@ export default function studentReducer(
       })
 
       const selectedIdsWithFetched = [...state.selectedAssignment.id, fetchedIds];
-
 
       let updatedSubAssignments = [];
       if (!hasParent) {

@@ -130,7 +130,7 @@ export function fetchAssignments(studentId) { // CHECKED
     return fetch(`http://localhost:3000/api/v1/students/student_assignments?studentId=${studentId}`)
     .then(resp => resp.json())
     .then(data => {
-      dispatch({ type: "FETCHED_ASSIGNMENTS", payload: { studentAssignments: data.studentAssignments, dueDates: data.dueDates }})
+      dispatch({ type: "FETCHED_ASSIGNMENTS", payload: { studentAssignments: data.studentAssignments, dueDates: data.dueDates, courseDates: data.courseDates }})
       dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
     });
   };

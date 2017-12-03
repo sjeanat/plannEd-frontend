@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SubAssignmentCard from './SubAssignmentCard';
-import { selectForToDo, completeParent, fetchAssignments, fetchSubAssignments, completeAssignment, completeSubAssignment, selectAssignment, deselectAssignment, deselectSubAssignment } from '../actions/students';
+import { selectForToDo, completeParent, fetchSubAssignments, completeAssignment, completeSubAssignment, selectAssignment, deselectAssignment, deselectSubAssignment } from '../actions/students';
 
 
 class AssignmentCard extends Component {

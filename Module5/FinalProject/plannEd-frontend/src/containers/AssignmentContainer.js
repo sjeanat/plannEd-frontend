@@ -31,7 +31,6 @@ class AssignmentContainer extends Component {
 
 
 function mapStateToProps(state) {
-  console.log("AssignmentContainer state:", state)
   return {
     student: state.student,
     studentCourses: state.studentCourses,
