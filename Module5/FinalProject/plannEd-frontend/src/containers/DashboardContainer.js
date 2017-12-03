@@ -24,8 +24,9 @@ class DashboardContainer extends Component {
     console.log("upcoming assignments", this.props.upcomingAssignments)
     return (
       <div>
+        {this.props.addConflict ? <Redirect to="/course-directory"/> : null}
         {this.props.student.id ? <AssignmentContainer /> : <Redirect to="/home"/>}
-        {this.props.student.id ? <DashboardCalendar {...calProps}/> : <Redirect to="/home"/> }
+        {this.props.student.id ? <DashboardCalendar calendar={this.props.calendar} {...calProps}/> : <Redirect to="/home"/> }
       </div>
     );
   };
@@ -34,9 +35,10 @@ class DashboardContainer extends Component {
 
 
 function mapStateToProps(state) {
-  console.log("dashboard container state", state.upcomingAssignments)
   return {
-    student: state.student
+    student: state.student,
+    calendar: state.calendar,
+    addConflict: state.directory.addConflict
   }
 };
 //

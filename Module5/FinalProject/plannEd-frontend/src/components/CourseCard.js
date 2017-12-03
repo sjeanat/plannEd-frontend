@@ -9,7 +9,7 @@ class CourseCard extends Component {
     const studentCourse = this.studentCourseCreator();
     const instructors = this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].instructors; //pull out intstructors
     this.props.onAddCourse(this.props.student, studentCourse, instructors);
-    this.props.history.push("/assignments");
+    this.props.history.push("/dashboard");
   };
 
   studentCourseCreator = () => {
@@ -29,7 +29,7 @@ class CourseCard extends Component {
       pattern: this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].pattern,
       facilityDescr: this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].facilityDescr,
       facilityDescrShort: this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].facilityDescrshort,
-      components: [] //add this to backend
+      components: []
     };
     this.props.selectedCourse.data.enrollGroups[0].componentsRequired.slice(1).forEach(component => {
       studentCourse.components.push({
@@ -72,18 +72,19 @@ class CourseCard extends Component {
       });
     });
 
+    console.log("course card Enrolled:", this.props.studentCourseIds, this.props.course.crseId)
     return (
       <div>
         <h1>{this.props.course.titleLong}</h1>
         <h4>{this.props.course.subject} {this.props.course.catalogNbr}</h4>
         <p>{this.props.course.description}</p>
-        <button onClick={this.handleDetails}>See Details</button>
+        {this.props.studentCourseIds.includes(this.props.course.crseId) ? "Enrolled" : <button onClick={this.handleDetails}>See Details</button>}
         {this.props.selectedCourse.data ? this.props.selectedCourse.data.crseId === this.props.course.crseId
           ?
             <div>
               {courseDetails}
               {this.requiredComponentsSelected()
-                ? //button shows up if other course shares required component
+                ?
                   <button onClick={this.handleAddCourse}>Add Course</button>
                 :
                   <p>Please select required components {this.props.selectedCourse.data ? ": " + this.props.selectedCourse.data.enrollGroups[0].componentsRequired.join(", ") : null }</p>
@@ -96,10 +97,13 @@ class CourseCard extends Component {
   };
 };
 
+
+
 function mapStateToProps(state) {
   return {
     student: state.student,
-    selectedCourse: state.selectedCourse
+    selectedCourse: state.selectedCourse,
+    studentCourseIds: state.studentCourseIds
   }
 }
 

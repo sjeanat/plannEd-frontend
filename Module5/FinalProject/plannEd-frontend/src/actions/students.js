@@ -92,10 +92,21 @@ export function addCourse(student, studentCourse, instructors) {
     })
     .then(resp => resp.json())
     .then(data => {
-      dispatch({ type: 'ADDED_COURSE', payload: { studentCourse: data.studentCourse, studentAssignments: data.studentAssignments }})
-      dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
+      if (data.error) {
+        dispatch({ type: 'ADD_COURSE_TIME_CONFLICT', payload: data.error });
+      } else {
+        debugger
+        dispatch({ type: 'ADDED_COURSE', payload: { studentCourse: data.studentCourse, studentAssignments: data.studentAssignments, dueDates: data.dueDates, courseDates: data.courseDates }})
+        dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
+      }
     });
   };
+};
+
+export function removeAddConflict() {
+  return {
+    type: "REMOVE_ADD_CONFLICT"
+  }
 };
 
 export function fetchSubAssignments(studentAssignmentId) { // CHECKED
@@ -119,7 +130,7 @@ export function fetchAssignments(studentId) { // CHECKED
     return fetch(`http://localhost:3000/api/v1/students/student_assignments?studentId=${studentId}`)
     .then(resp => resp.json())
     .then(data => {
-      dispatch({ type: "FETCHED_ASSIGNMENTS", payload: data.studentAssignments })
+      dispatch({ type: "FETCHED_ASSIGNMENTS", payload: { studentAssignments: data.studentAssignments, dueDates: data.dueDates }})
       dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
     });
   };

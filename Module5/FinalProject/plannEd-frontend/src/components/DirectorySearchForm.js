@@ -20,7 +20,7 @@ class DirectorySearchForm extends Component {
   };
 
   handleSubjectChange = (event) => {
-    this.props.onUpdateSubject(event.target.value);
+    this.props.onUpdateSubject(event.target.value.toUpperCase());
   };
 
   render() {

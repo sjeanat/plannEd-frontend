@@ -5,7 +5,7 @@ export default class AssignmentList extends Component {
   render() {
 
     const assignments = this.props.assignments.map((assignment,idx) => {
-      return <AssignmentCard key={idx} assignment={assignment}/>
+      return <AssignmentCard key={assignment.studentAssignmentId} assignment={assignment}/>
     });
     return (
       <div>

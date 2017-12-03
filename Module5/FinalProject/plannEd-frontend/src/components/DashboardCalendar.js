@@ -12,11 +12,12 @@ export default class DashboardCalendar extends Component {
   render() {
     BigCalendar.momentLocalizer(moment);
     const allViews = Object.keys(BigCalendar.Views).map(k => BigCalendar.Views[k])
+    const calEvents = [...this.props.calendar.courses, ...this.props.calendar.dueDates]
 
     return (
       <div className="dashboard-calendar">
         <BigCalendar
-          events={[]}
+          events={calEvents}
           startAccessor='startDate'
           endAccessor='endDate'
           selectable={true}

@@ -8,6 +8,7 @@ import AssignmentList from '../components/AssignmentList';
 class AssignmentContainer extends Component {
 
   componentDidMount() {
+    console.log("assignment container CDM")
     this.props.onFetchAssignments(this.props.student.id);
   };
 
@@ -30,6 +31,7 @@ class AssignmentContainer extends Component {
 
 
 function mapStateToProps(state) {
+  console.log("AssignmentContainer state:", state)
   return {
     student: state.student,
     studentCourses: state.studentCourses,

@@ -2,12 +2,14 @@ export default function studentReducer(
   state = {
     calendar: {
       courses: [],
+      dueDates: [],
       toDoItems: [],
       selectedEvent: {}
     },
     directory: {
       subjects: [],
-      courses: []
+      courses: [],
+      addConflict: null
     },
     student: {
       id: null,
@@ -16,17 +18,16 @@ export default function studentReducer(
       lastName: ""
     },
     studentCourses: [],
+    studentCourseIds: [],
     studentAssignments: {
       data: [],
       completedFilter: "None",
       courseFilter: "All Courses",
       sortBy: "Due Date",
       sortDirection: "Ascending",
-      limit: "",
+      limit: 100,
       display: []
     },
-    upcomingAssignments: [],
-    upcomingLimit: 10,
     selectedSemester: "",
     selectedSubject: "",
     selectedCourse: {
@@ -84,30 +85,139 @@ export default function studentReducer(
       };
     case "SIGN_OUT":
       return {
-        ...state,
+        calendar: {
+          courses: [],
+          toDoItems: [],
+          selectedEvent: {},
+          dueDates: []
+        },
+        directory: {
+          subjects: [],
+          courses: [],
+          addConflict: null
+        },
         student: {
           id: null,
           email: "",
           firstName: "",
           lastName: ""
+        },
+        studentCourses: [],
+        studentCourseIds: [],
+        studentAssignments: {
+          data: [],
+          completedFilter: "None",
+          courseFilter: "All Courses",
+          sortBy: "Due Date",
+          sortDirection: "Ascending",
+          limit: null,
+          display: []
+        },
+        selectedSemester: "",
+        selectedSubject: "",
+        selectedCourse: {
+          data: null,
+          selectedLEC: null,
+          selectedDIS: null,
+          selectedSEM: null,
+          selectedTA: null
+        },
+        selectedForTodo: {},
+        selectedAssignment: {
+          id: [],
+          subAssignments: [],
+          firstChild: true
+        },
+        loading: false
+      };
+    case "ADD_COURSE_TIME_CONFLICT":
+      return {
+        ...state,
+        directory: {
+          ...state.directory,
+          addConflict: action.payload
+        }
+      };
+    case "REMOVE_ADD_CONFLICT":
+      return {
+        ...state,
+        directory: {
+          ...state.directory,
+          addConflict: null
         }
       };
     case "ADDED_COURSE":
-      const newCourse = action.payload.studentCourse;
-      let updatedCourses = [];
-      //format calendar data
-      // const newCourse = action.payload.studentCourse
-      // const dates = newCourse.pattern.split("").map(day => {
+      //CREATE EVENTS FOR COURSE DATES
+      // const beginDt = new Date(newCourse.sessionBeginDt);
+      // const endDt = new Date(newCourse.sessionEndDt);
+      // let timeStart = newCourse.timeStart.match(/[a-zA-Z]+|[0-9]+/g)
+      // timeStart[0] = timeStart[2] === "PM" ? parseInt(timeStart[0]) + 12 : timeStart[0]
+      // let timeEnd = newCourse.timeEnd.match(/[a-zA-Z]+|[0-9]+/g)
+      // timeEnd[0] = timeEnd[2] === "PM" ? parseInt(timeEnd[0]) + 12 : timeEnd[0]
+      // let updatedCourses = [];
+      // const startDates = newCourse.pattern.split("").map(day => {
+      //   let num;
+      //   let bgnDt = new Date(beginDt);
+      //   switch (day) {
+      //     case "M":
+      //       num = 7;
+      //       break;
+      //     case "T":
+      //       num = 8;
+      //       break;
+      //     case "W":
+      //       num = 9;
+      //       break;
+      //     case "R":
+      //       num = 10;
+      //       break;
+      //     case "F":
+      //       num = 11;
+      //       break;
+      //     default: break;
+      //   };
+      //   bgnDt.setDate(bgnDt.getDate() + (1 + num - bgnDt.getDay()) % 7);
+      //   bgnDt.setHours(timeStart[0])
+      //   bgnDt.setMinutes(timeStart[1])
+      //   return bgnDt;
+      // });
       //
+      // const courseDates = [];
+      // startDates.forEach(start => {
+      //   let max = Math.round((endDt-start)/(1000*60*60*24))
+      //   for (let i = 1; i <= Math.floor(max/7) + 1; i++) {
+      //     let courseDt = new Date(start);
+      //     courseDt.setDate(courseDt.getDate() + (i * 7));
+      //     let courseDtEnd = new Date(courseDt);
+      //     courseDtEnd.setHours(timeEnd[0]);
+      //     courseDtEnd.setMinutes(timeEnd[1]);
+      //     courseDates.push({
+      //       'title': `${newCourse.subject} ${newCourse.catalogNbr}`,
+      //       'startDate': courseDt,
+      //       'endDate': courseDtEnd
+      //     });
+      //   };
       // })
+
+      //CREATE EVENTS FOR COURSE ASSIGNMENTS
+      // const assignmentDueDates = action.payload.dueDates.map(date => {
+      //   return {
+      //     'title': `Due ${date.title}`, //change title later
+      //     'startDate': new Date(date.startDate),
+      //     'endDate': new Date(date.endDate)
+      //   }
+      // });
+      // const newAssignments = action.payload.studentAssignments;
 
       return {
         ...state,
         calendar: {
           ...state.calendar,
-          courses: updatedCourses
+          courses: [...state.calendar.courses, ...action.payload.courseDates],
+          dueDates: [...state.calendar.dueDates, ...action.payload.dueDates]
         },
-        studentCourses: [...state.studentCourses, newCourse],
+        studentCourses: [...state.studentCourses, action.payload.studentCourse],
+        studentCourseIds: [...state.studentCourseIds, action.payload.studentCourse.crseId],
         studentAssignments: {
           ...state.studentAssignments,
           data: [...state.studentAssignments.data, ...action.payload.studentAssignments]
@@ -123,12 +233,19 @@ export default function studentReducer(
       };
     case "FETCHED_ASSIGNMENTS":
       console.log('fetched_assignments', action.payload)
+      const fetchedAssignments = action.payload.studentAssignments;
+      const fetchedDueDates = action.payload.dueDates;
       return {
         ...state,
         studentAssignments: {
           ...state.studentAssignments,
-          display: action.payload,
-          data: action.payload
+          display: fetchedAssignments,
+          data: fetchedAssignments
+        },
+        calendar: {
+          ...state.calendar,
+          courses: [],
+          dueDates: fetchedDueDates
         },
         loading: false
       };
@@ -146,17 +263,12 @@ export default function studentReducer(
           parentId: parentId
         }
       })
-      // debugger
+
       const selectedIdsWithFetched = [...state.selectedAssignment.id, fetchedIds];
 
 
       let updatedSubAssignments = [];
       if (!hasParent) {
-        console.log("new state selectedAssignment",{
-          ...state.selectedAssignment,
-          id: [[parentId]],
-          subAssignments: newSubAssignments
-        })
         return {
           ...state,
           selectedAssignment: {
@@ -306,7 +418,6 @@ export default function studentReducer(
         }
       }
     case "SELECT_ASSIGNMENT":
-      console.log("select assignment")
       return {
         ...state,
         selectedAssignment: {
@@ -398,7 +509,7 @@ export default function studentReducer(
           courseFilter: "All",
           sortBy: "Due Date",
           sortDirection: "Ascending",
-          limit: "None",
+          limit: "",
           display: state.studentAssignments.data
         }
       }
@@ -433,9 +544,13 @@ export default function studentReducer(
         default: break;
       };
       let date = new Date();
-      const limitDate = state.studentAssignments.limit === "" ? new Date(date.setDate(date.getDate() + 10)) : new Date(date.setDate(date.getDate() + parseInt(state.studentAssignments.limit, 10)))
+      const limitDate = !!state.studentAssignments.limit ? new Date(date.setDate(date.getDate() + state.studentAssignments.limit)) : new Date(date.setDate(date.getDate() + 100));
+      console.log("assignments display before filter", assignmentsDisplay)
+
+
       assignmentsDisplay = assignmentsDisplay.filter(assignment => (new Date(assignment.dueDate)) < limitDate);
       //apply limit
+      console.log("change assignments display:", assignmentsDisplay)
       return {
         ...state,
         studentAssignments: {
