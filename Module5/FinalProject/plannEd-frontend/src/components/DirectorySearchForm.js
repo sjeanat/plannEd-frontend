@@ -30,14 +30,14 @@ class DirectorySearchForm extends Component {
     return (
       <div className="directory-search-form-wrapper">
         <form onSubmit={this.handleSubmit}>
-          Semester:
-          <select onChange={this.handleSemesterChange} placeholder="select subject">
+          <span className="course-form-label">Semester:</span>
+          <select className="course-form-select" onChange={this.handleSemesterChange} placeholder="select subject">
             <option value="FA17">FA17</option>
             <option value="WI17">WI17</option>
             <option value="SP18">SP18</option>
           </select>
-          Subject:
-          <input list="subjects" name="subjects" onChange={this.handleSubjectChange}/>
+          <span className="course-form-label">Subject:</span>
+          <input className="course-form-input" list="subjects" name="subjects" onChange={this.handleSubjectChange}/>
           <datalist id="subjects">
             {subjectOptions}
           </datalist>
