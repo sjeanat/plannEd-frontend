@@ -19,7 +19,7 @@ class SignUpForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.props.onSignUp(this.props.student.email, this.props.student.firstName, this.props.student.lastName);
-    this.props.history.push("/home");
+    this.props.history.push("/dashboard");
   };
 
   render() {

@@ -95,7 +95,6 @@ export function addCourse(student, studentCourse, instructors) {
       if (data.error) {
         dispatch({ type: 'ADD_COURSE_TIME_CONFLICT', payload: data.error });
       } else {
-        debugger
         dispatch({ type: 'ADDED_COURSE', payload: { studentCourse: data.studentCourse, studentAssignments: data.studentAssignments, dueDates: data.dueDates, courseDates: data.courseDates }})
         dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
       }

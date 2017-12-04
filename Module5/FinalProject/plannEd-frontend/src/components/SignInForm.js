@@ -11,7 +11,7 @@ class SignUpForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.props.onSignIn(this.props.student.email);
-    this.props.history.push("/home");
+    this.props.history.push("/dashboard"); //not working??
   };
 
   render() {
