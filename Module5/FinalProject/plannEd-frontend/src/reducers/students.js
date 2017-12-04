@@ -4,7 +4,8 @@ export default function studentReducer(
       courses: [],
       dueDates: [],
       toDoItems: [],
-      selectedEvent: {}
+      selectedEvent: {},
+      defaultDate: null
     },
     directory: {
       subjects: [],
@@ -21,11 +22,13 @@ export default function studentReducer(
     studentCourseIds: [],
     studentAssignments: {
       data: [],
-      completedFilter: "None",
+      completedFilter: "Incomplete",
+      prevCompletedFilter: "Incomplete",
       courseFilter: "All Courses",
       sortBy: "Due Date",
       sortDirection: "Ascending",
-      limit: 100,
+      limitStart: null,
+      limitEnd: null,
       display: []
     },
     selectedSemester: "",
@@ -35,15 +38,21 @@ export default function studentReducer(
       selectedLEC: null,
       selectedDIS: null,
       selectedSEM: null,
-      selectedTA: null
+      selectedTA: null,
+      courseColor: null,
+      colorSelected: null
     },
-    selectedForTodo: 0,
+    selectedForToDo: 0,
     slotSelected: false,
     selectedSlot: {
       startTime: null,
       endTime: null,
       info: null,
       title: null
+    },
+    calendarClick: {
+      x: null,
+      y: null
     },
     selectedAssignment: {
       id: [],
@@ -127,7 +136,9 @@ export default function studentReducer(
           selectedLEC: null,
           selectedDIS: null,
           selectedSEM: null,
-          selectedTA: null
+          selectedTA: null,
+          courseColor: null,
+          colorSelected: null
         },
         selectedForTodo: 0,
         selectedAssignment: {
@@ -154,68 +165,6 @@ export default function studentReducer(
         }
       };
     case "ADDED_COURSE":
-      //CREATE EVENTS FOR COURSE DATES
-      // const beginDt = new Date(newCourse.sessionBeginDt);
-      // const endDt = new Date(newCourse.sessionEndDt);
-      // let timeStart = newCourse.timeStart.match(/[a-zA-Z]+|[0-9]+/g)
-      // timeStart[0] = timeStart[2] === "PM" ? parseInt(timeStart[0]) + 12 : timeStart[0]
-      // let timeEnd = newCourse.timeEnd.match(/[a-zA-Z]+|[0-9]+/g)
-      // timeEnd[0] = timeEnd[2] === "PM" ? parseInt(timeEnd[0]) + 12 : timeEnd[0]
-      // let updatedCourses = [];
-      // const startDates = newCourse.pattern.split("").map(day => {
-      //   let num;
-      //   let bgnDt = new Date(beginDt);
-      //   switch (day) {
-      //     case "M":
-      //       num = 7;
-      //       break;
-      //     case "T":
-      //       num = 8;
-      //       break;
-      //     case "W":
-      //       num = 9;
-      //       break;
-      //     case "R":
-      //       num = 10;
-      //       break;
-      //     case "F":
-      //       num = 11;
-      //       break;
-      //     default: break;
-      //   };
-      //   bgnDt.setDate(bgnDt.getDate() + (1 + num - bgnDt.getDay()) % 7);
-      //   bgnDt.setHours(timeStart[0])
-      //   bgnDt.setMinutes(timeStart[1])
-      //   return bgnDt;
-      // });
-      //
-      // const courseDates = [];
-      // startDates.forEach(start => {
-      //   let max = Math.round((endDt-start)/(1000*60*60*24))
-      //   for (let i = 1; i <= Math.floor(max/7) + 1; i++) {
-      //     let courseDt = new Date(start);
-      //     courseDt.setDate(courseDt.getDate() + (i * 7));
-      //     let courseDtEnd = new Date(courseDt);
-      //     courseDtEnd.setHours(timeEnd[0]);
-      //     courseDtEnd.setMinutes(timeEnd[1]);
-      //     courseDates.push({
-      //       'title': `${newCourse.subject} ${newCourse.catalogNbr}`,
-      //       'startDate': courseDt,
-      //       'endDate': courseDtEnd
-      //     });
-      //   };
-      // })
-
-      //CREATE EVENTS FOR COURSE ASSIGNMENTS
-      // const assignmentDueDates = action.payload.dueDates.map(date => {
-      //   return {
-      //     'title': `Due ${date.title}`, //change title later
-      //     'startDate': new Date(date.startDate),
-      //     'endDate': new Date(date.endDate)
-      //   }
-      // });
-      // const newAssignments = action.payload.studentAssignments;
-
       return {
         ...state,
         calendar: {
@@ -234,7 +183,9 @@ export default function studentReducer(
           selectedLEC: null,
           selectedDIS: null,
           selectedSEM: null,
-          selectedTA: null
+          selectedTA: null,
+          courseColor: null,
+          colorSelected: null
         },
         loading: false
       };
@@ -493,7 +444,9 @@ export default function studentReducer(
           selectedLEC: null,
           selectedDIS: null,
           selectedSEM: null,
-          selectedTA: null
+          selectedTA: null,
+          courseColor: null,
+          colorSelected: null
         }
       }
     case "SELECT_DIRECTORY_COURSE_COMPONENT":
@@ -504,6 +457,22 @@ export default function studentReducer(
           [`selected${action.payload.type}`]: action.payload.component
         }
       }
+    case "SELECT_COURSE_COLOR":
+      return {
+        ...state,
+        selectedCourse: {
+          ...state.selectedCourse,
+          courseColor: action.payload
+        }
+      }
+    case "SUBMIT_COURSE_COLOR":
+      return {
+        ...state,
+        selectedCourse: {
+          ...state.selectedCourse,
+          colorSelected: true
+        }
+      };
     case "LOADING":
       return {
         ...state,
@@ -524,14 +493,17 @@ export default function studentReducer(
       }
     case "CHANGE_ASSIGNMENTS_DISPLAY":
       let assignmentsDisplay = state.studentAssignments.data;
+      let subAssignmentsDisplay = state.selectedAssignment.subAssignments;
       switch (state.studentAssignments.completedFilter) {
         case "None":
           break;
         case "Completed":
           assignmentsDisplay = assignmentsDisplay.filter(assignment => assignment.completed);
+          subAssignmentsDisplay = subAssignmentsDisplay.filter(obj => obj.assignment.completed);
           break;
         case "Incomplete":
           assignmentsDisplay = assignmentsDisplay.filter(assignment => !assignment.completed);
+          subAssignmentsDisplay = subAssignmentsDisplay.filter(obj => !obj.assignment.completed);
           break;
         default: break;
       };
@@ -549,24 +521,56 @@ export default function studentReducer(
             assignmentsDisplay = assignmentsDisplay.reverse();
           };
           break;
-        // case "Course":
         default: break;
       };
-      let date = new Date();
-      const limitDate = !!state.studentAssignments.limit ? new Date(date.setDate(date.getDate() + state.studentAssignments.limit)) : new Date(date.setDate(date.getDate() + 100));
-      console.log("assignments display before filter", assignmentsDisplay)
-
-
-      assignmentsDisplay = assignmentsDisplay.filter(assignment => (new Date(assignment.dueDate)) < limitDate);
-      //apply limit
-      console.log("change assignments display:", assignmentsDisplay)
-      return {
-        ...state,
-        studentAssignments: {
-          ...state.studentAssignments,
-          display: assignmentsDisplay
+      let today = new Date("9/04/2017");
+      let later = new Date(today);
+      const limitStart = !!state.studentAssignments.limitStart ? state.studentAssignments.limitStart : today;
+      later.setDate(later.getDate() + 30);
+      const limitEnd = !!state.studentAssignments.limitEnd ? state.studentAssignments.limitEnd : later;
+      assignmentsDisplay = assignmentsDisplay.filter(assignment => (new Date(assignment.dueDate)) < limitEnd && (new Date(assignment.dueDate)) > limitStart);
+      console.log("limit start", limitStart)
+      if (state.studentAssignments.prevCompletedFilter !== state.studentAssignments.completedFilter) {
+        console.log("reset selected")
+        return {
+          ...state,
+          calendar: {
+            ...state.calendar,
+            defaultDate: limitStart
+          },
+          studentAssignments: {
+            ...state.studentAssignments,
+            limitStart: limitStart,
+            limitEnd: limitEnd,
+            prevCompletedFilter: state.studentAssignments.completedFilter,
+            display: assignmentsDisplay
+          },
+          selectedAssignment: {
+            id: [],
+            subAssignments: [],
+            firstChild: true
+          }
         }
-      };
+      } else {
+        return {
+          ...state,
+          calendar: {
+            ...state.calendar,
+            defaultDate: limitStart
+          },
+          studentAssignments: {
+            ...state.studentAssignments,
+            limitStart: limitStart,
+            limitEnd: limitEnd,
+            prevCompletedFilter: state.studentAssignments.completedFilter,
+            display: assignmentsDisplay
+          },
+          selectedAssignment: {
+            ...state.selectedAssignment,
+            subAssignments: subAssignmentsDisplay
+          }
+        };
+      }
     case "FILTER_BY_COURSE":
       return {
         ...state,
@@ -576,18 +580,22 @@ export default function studentReducer(
         }
       }
     case "FILTER_BY_COMPLETED":
+      let prevCompletedFilterI = state.studentAssignments.completedFilter;
       return {
         ...state,
         studentAssignments: {
           ...state.studentAssignments,
+          prevCompletedFilter: prevCompletedFilterI,
           completedFilter: "Completed"
         }
       }
     case "FILTER_BY_INCOMPLETE":
+      let prevCompletedFilterII = state.studentAssignments.completedFilter;
       return {
         ...state,
         studentAssignments: {
           ...state.studentAssignments,
+          prevCompletedFilter: prevCompletedFilterII,
           completedFilter: "Incomplete"
         }
       }
@@ -596,6 +604,7 @@ export default function studentReducer(
         ...state,
         studentAssignments: {
           ...state.studentAssignments,
+          prevCompletedFilter: state.studentAssignments.completedFilter,
           completedFilter: "None"
         }
       }
@@ -615,12 +624,20 @@ export default function studentReducer(
           sortDirection: action.payload
         }
       }
-    case "LIMIT_CHANGE":
+    case "LIMIT_START_CHANGE":
       return {
         ...state,
         studentAssignments: {
           ...state.studentAssignments,
-          limit: action.payload
+          limitStart: action.payload
+        }
+      }
+    case "LIMIT_END_CHANGE":
+      return {
+        ...state,
+        studentAssignments: {
+          ...state.studentAssignments,
+          limitEnd: action.payload
         }
       }
     case "SELECT_FOR_TO_DO":
@@ -633,7 +650,12 @@ export default function studentReducer(
       console.log("reducer deselect to do")
       return {
         ...state,
-        selectedForToDo: 0
+        selectedForToDo: 0,
+        slotSelected: false,
+        calendarClick: {
+          x: 0,
+          y: 0
+        }
       }
     case "SELECT_SLOT":
       return {
@@ -675,6 +697,22 @@ export default function studentReducer(
         calendar: {
           ...state.calendar,
           toDoItems: [...state.calendar.toDoItems, action.payload]
+        },
+        slotSelected: false,
+        selectedSlot: {
+          startTime: null,
+          endTime: null,
+          info: null,
+          title: null
+        },
+        selectedForToDo: 0
+      }
+    case "CALENDAR_CLICK":
+      return {
+        ...state,
+        calendarClick: {
+          x: action.payload.x,
+          y: action.payload.y
         }
       }
     default:

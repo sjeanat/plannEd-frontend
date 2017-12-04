@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { changeAssignmentsDisplay, sortBy, sortDirection, limitChange, filterByCourse, filterByCompleted, removeCompletedFilter, filterByIncomplete } from '../actions/students';
+import { changeAssignmentsDisplay, sortBy, sortDirection, limitStartChange, limitEndChange, filterByCourse, filterByCompleted, removeCompletedFilter, filterByIncomplete } from '../actions/students';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import './AssignmentSearchForm.css';
+import 'react-datepicker/dist/react-datepicker.css';
+import $ from 'jquery';
 
 class AssignmentSearchForm extends Component {
 
   componentDidMount() {
     this.props.onChangeAssignmentsDisplay();
+
   };
 
   handleSubmit = (event) => {
@@ -43,15 +49,27 @@ class AssignmentSearchForm extends Component {
     };
   };
 
+  handleLimitStartChange = (event) => {
+    console.log("start limit", event._d)
+    this.props.onLimitStartChange(event._d)
+  };
+
+  handleLimitEndChange = (event) => {
+    console.log("end limit", event._d)
+    this.props.onLimitEndChange(event._d)
+  };
+
 
   render() {
     const courseOptions = this.props.courses.map((course, idx) => {
       return <option key={idx} value={course.studentCourseId}>{course.title}</option>
     });
+    const aMoment = moment();
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          Incomplete: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" value="Incomplete"/>
+      <div className="assignment-form-container">
+        <form className="assignment-form" onSubmit={this.handleSubmit}>
+          {console.log("completefilter", this.props.incompleteFilter)}
+          Incomplete: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" checked={this.props.incompleteFilter ? "checked" : ""} value="Incomplete"/>
           Completed: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" value="Completed"/>
           All: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" value="All" />
           Course:
@@ -59,22 +77,36 @@ class AssignmentSearchForm extends Component {
             <option value="All Courses">All Courses</option>
             {courseOptions}
           </select>
-          Sort By:
-          <select onChange={this.handleSortChange}>
-            <option value="Due Date">Due Date</option>
-          </select>
           Asc:
-          <input onClick={this.handleSortDirection} type="radio" name="sort" value="Ascending"/>
+          <input onClick={this.handleSortDirection} type="radio" name="sort" value="Ascending" checked={this.props.ascendingFilter ? "checked" : ""}/>
           Desc:
           <input onClick={this.handleSortDirection} type="radio" name="sort" value="Descending"/>
-          Days Limit:
-          <input type="number" onChange={this.handleLimitChange}/>
+          Date Range:
+          <DatePicker
+            className="assignment-search-date-picker"
+            selected={this.props.limitStart ? moment(this.props.limitStart) : aMoment}
+            onChange={this.handleLimitStartChange}
+          />
+          <DatePicker
+            className="assignment-search-date-picker"
+            selected={this.props.limitEnd ? moment(this.props.limitEnd) : aMoment}
+            onChange={this.handleLimitEndChange}
+          />
           <input type="submit" value="Search"/>
         </form>
       </div>
     );
   };
 };
+
+function mapStateToProps(state) {
+  return {
+    incompleteFilter: state.studentAssignments.completedFilter === "Incomplete",
+    ascendingFilter: state.studentAssignments.sortDirection === "Ascending",
+    limitStart: state.studentAssignments.limitStart,
+    limitEnd: state.studentAssignments.limitEnd
+  }
+}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -99,10 +131,13 @@ function mapDispatchToProps(dispatch) {
     onSortDirection: (direction) => {
       dispatch(sortDirection(direction));
     },
-    onLimitChange: (limit) => {
-      dispatch(limitChange(limit));
+    onLimitStartChange: (limit) => {
+      dispatch(limitStartChange(limit));
+    },
+    onLimitEndChange: (limit) => {
+      dispatch(limitEndChange(limit));
     }
   }
 };
 
-export default connect(null, mapDispatchToProps)(AssignmentSearchForm);
+export default connect(mapStateToProps, mapDispatchToProps)(AssignmentSearchForm);

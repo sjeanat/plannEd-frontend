@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import DashboardCalendar from '../components/DashboardCalendar';
 import AssignmentContainer from './AssignmentContainer';
 import NavBar from '../components/NavBar';
-import { titleChange, selectSlot, submitToDo, startChange, endChange } from '../actions/students';
+import { deselectForToDo, calendarClick, titleChange, selectSlot, submitToDo, startChange, endChange } from '../actions/students';
+
 
 
 class DashboardContainer extends Component {
 
   slotSelected = (slotInfo) => {
-    console.log(slotInfo)
+    console.log("slotSelected", slotInfo)
     this.props.onSelectSlot(slotInfo)
   }
 
@@ -36,32 +37,49 @@ class DashboardContainer extends Component {
     this.props.onTitleChange(event.target.value);
   };
 
+  handleCloseForm = (event) => {
+    this.props.onDeselectForToDo();
+  };
+
   render() {
-    console.log("RENDER DBCONT", this.props);
+    const formCss = `
+    .to-do-form-wrapper {
+      position: absolute;
+      height: 200px;
+      width: 200px;
+      left: ${this.props.calendarClick.x}px;
+      top: ${this.props.calendarClick.y - 90}px;
+      z-index: 100;
+      background: red;
+    }
+    `
     const calProps = {slotSelected: this.slotSelected, setStartTime: this.setStartTime, setEndTime: this.setEndTime }
     return (
       <div className="dashboard-container">
-        <div>
-          {this.props.slotSelected
+          <style>{formCss}</style>
+          {this.props.slotSelected && (this.props.selectedForToDo !== 0)
             ?
-              <div>
+              <div className="to-do-form-wrapper assignment" >
                 <form onSubmit={this.handleSubmit}>
                   Title:
                   <input type="text" value={this.props.selectedSlot.title} onChange={this.handleTitleChange}/>
+                  <br/>
                   Start Time:
                   <input type="time" value={this.props.selectedSlot.startTime} onChange={this.handleStartChange}/>
+                  <br/>
                   End Time:
                   <input type="time" value={this.props.selectedSlot.endTime} onChange={this.handleEndChange}/>
+                  <br/>
                   <input type="submit" value="Create To Do!"/>
+                  <p onClick={this.handleCloseForm}>X</p>
                 </form>
               </div>
             : null
           }
-        </div>
         <NavBar {...this.props} activeTab="dashboard" />
         {this.props.student.id ? <AssignmentContainer /> : <Redirect to="/"/>}
         {this.props.addConflict ? <Redirect to="/course-directory"/> : null}
-        {this.props.student.id ? <DashboardCalendar calendar={this.props.calendar} {...calProps}/> : <Redirect to="/"/> }
+        {this.props.student.id ? <DashboardCalendar defaultDate={this.props.defaultDate} onCalendarClick={this.props.onCalendarClick} calendar={this.props.calendar} {...calProps}/> : <Redirect to="/"/> }
       </div>
     );
   };
@@ -72,13 +90,16 @@ class DashboardContainer extends Component {
 
 
 function mapStateToProps(state) {
+
   return {
     student: state.student,
     calendar: state.calendar,
     addConflict: state.directory.addConflict,
     slotSelected: state.slotSelected,
     selectedSlot: state.selectedSlot,
-    selectedForToDo: state.selectedForToDo
+    selectedForToDo: state.selectedForToDo,
+    calendarClick: state.calendarClick,
+    defaultDate: state.calendar.defaultDate
   }
 };
 
@@ -98,6 +119,12 @@ function mapDispatchToProps(dispatch) {
     },
     onTitleChange: (title) => {
       dispatch(titleChange(title));
+    },
+    onCalendarClick: (xPos, yPos) => {
+      dispatch(calendarClick(xPos, yPos));
+    },
+    onDeselectForToDo: () => {
+      dispatch(deselectForToDo());
     }
   }
 };

@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addCourse, selectDirectoryCourse, selectDirectoryCourseComponent } from '../actions/students';
+import { submitCourseColor, selectCourseColor, addCourse, selectDirectoryCourse, selectDirectoryCourseComponent } from '../actions/students';
 import CourseDetails from './CourseDetails';
-
+import { HuePicker } from 'react-color'
+;
 class CourseCard extends Component {
 
   handleAddCourse = (event) => {
     const studentCourse = this.studentCourseCreator();
     const instructors = this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].instructors; //pull out intstructors
-    this.props.onAddCourse(this.props.student, studentCourse, instructors);
+    this.props.onAddCourse(this.props.student, studentCourse, instructors, this.props.selectedCourse.courseColor);
     this.props.history.push("/dashboard");
   };
 
@@ -62,6 +63,18 @@ class CourseCard extends Component {
     return selected.includes(false) ? false : true;
   };
 
+  colorSelected = () => {
+    return !!this.props.selectedCourse.colorSelected
+  };
+
+  handleCourseColorChange = (event) => {
+    this.props.onSelectCourseColor(event.hex)
+  }
+
+  handleSubmitCourseColor = () => {
+    this.props.onSubmitCourseColor();
+  }
+
   render() {
     let courseDetails = [];
     this.props.course.enrollGroups.forEach(group => {
@@ -72,7 +85,9 @@ class CourseCard extends Component {
       });
     });
 
-    console.log("course card Enrolled:", this.props.studentCourseIds, this.props.course.crseId)
+    const courseColor = !!this.props.courseColor ? this.props.courseColor : "#fff"
+
+    console.log("course card color:", this.props.courseColor)
     return (
       <div>
         <h1>{this.props.course.titleLong}</h1>
@@ -85,7 +100,21 @@ class CourseCard extends Component {
               {courseDetails}
               {this.requiredComponentsSelected()
                 ?
-                  <button onClick={this.handleAddCourse}>Add Course</button>
+                  <div>
+                    {this.colorSelected()
+                      ?
+                        <button onClick={this.handleAddCourse}>Add Course</button>
+                      :
+                        <div>
+                          <p>Pick a color for your course!</p>
+                          <HuePicker
+                            color={courseColor}
+                            onChangeComplete={this.handleCourseColorChange}
+                          />
+                          <button onClick={this.handleSubmitCourseColor}>Select Color</button>
+                        </div>
+                    }
+                  </div>
                 :
                   <p>Please select required components {this.props.selectedCourse.data ? ": " + this.props.selectedCourse.data.enrollGroups[0].componentsRequired.join(", ") : null }</p>
               }
@@ -103,20 +132,28 @@ function mapStateToProps(state) {
   return {
     student: state.student,
     selectedCourse: state.selectedCourse,
-    studentCourseIds: state.studentCourseIds
+    studentCourseIds: state.studentCourseIds,
+    courseColor: state.selectedCourse.courseColor,
+    colorSelected: state.selectedCourse.colorSelected
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onAddCourse: (student, studentCourse, instructors) => {
-      dispatch(addCourse(student, studentCourse, instructors));
+    onAddCourse: (student, studentCourse, instructors, color) => {
+      dispatch(addCourse(student, studentCourse, instructors, color));
     },
     onSelectCourse: (course) => {
       dispatch(selectDirectoryCourse(course));
     },
     onSelectComponent: (type, component, section) => {
       dispatch(selectDirectoryCourseComponent(type, component, section));
+    },
+    onSelectCourseColor: (color) => {
+      dispatch(selectCourseColor(color));
+    },
+    onSubmitCourseColor: () => {
+      dispatch(submitCourseColor());
     }
   }
 }

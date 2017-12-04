@@ -1,3 +1,14 @@
+/* animations */
+@-webkit-keyframes slide-in {
+  0%   { opacity: 0; margin-top: -50%; }
+  100% { opacity: 1; margin-top: 0; }
+}
+
+@keyframes fade-in {
+  0%   { opacity: 0; margin-top: -50%; }
+  100% { opacity: 1; margin-top: 0; }
+}
+
 .body {
   height: 100%;
   overflow: hidden;
@@ -16,6 +27,10 @@
   user-select: none;
 }
 
+h2 {
+  margin: 0;
+}
+
 .app-wrapper {
   bottom: 0;
   display: flex;
@@ -31,8 +46,7 @@
 .signin-container,
 .signup-container {
   display: flex;
-  overflow-y: scroll;
-  width: 100%;
+  flex-grow: 1;
 }
 
 /* DirectoryCourses */
@@ -62,4 +76,47 @@
 .directory-search-form-wrapper {
   position: relative;
   width: 100%;
+}
+
+/* Assignments */
+/*.nav-assignments {
+  background: #8BC34A;
+  height: 100%;
+  left: 90px;
+  position: absolute;
+  top: 0;
+  width: 500px;
+}*/
+
+.assignment-container {
+  width: 100%;
+}
+
+.assignment-form-container {
+  background: #5a0202;
+  height: 70px;
+  width: 100%;
+}
+
+.assignment-form {
+  align-items: center;
+  color: rgba(238, 238, 238, 0.51);
+  display: flex;
+  height: 100%;
+  justify-content: center;
+}
+
+.assignment-list-container {
+  background: #333;
+  display: block;
+  height: 100%;
+  max-width: 350px;
+  overflow-y: scroll;
+  position: absolute;
+  top: 70px;
+}
+
+.assignment-list-container-inner {
+  animation: slide-in .3s;
+  padding: 20px;
 }

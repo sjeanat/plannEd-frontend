@@ -79,7 +79,7 @@ export function signOutUser() {
   return { type: "SIGN_OUT"};
 };
 
-export function addCourse(student, studentCourse, instructors) {
+export function addCourse(student, studentCourse, instructors, color) {
   return (dispatch) => {
     dispatch({ type: 'LOADING'});
     return fetch(`http://localhost:3000/api/v1/students/add_student_course`, {
@@ -88,7 +88,7 @@ export function addCourse(student, studentCourse, instructors) {
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
-      body: JSON.stringify({ student, studentCourse, instructors })
+      body: JSON.stringify({ student, studentCourse, instructors, color })
     })
     .then(resp => resp.json())
     .then(data => {
@@ -277,9 +277,16 @@ export function sortDirection(direction) {
   }
 };
 
-export function limitChange(limit) {
+export function limitStartChange(limit) {
   return {
-      type: "LIMIT_CHANGE",
+      type: "LIMIT_START_CHANGE",
+      payload: limit
+  }
+};
+
+export function limitEndChange(limit) {
+  return {
+      type: "LIMIT_END_CHANGE",
       payload: limit
   }
 };
@@ -378,5 +385,25 @@ export function submitToDo(date, time, studentAssignmentId, title) {
       .then(json => {
         dispatch({ type: "SUBMITTED_TO_DO", payload: json })
       })
+  }
+}
+
+export function calendarClick(xPos, yPos) {
+  return {
+    type: "CALENDAR_CLICK",
+    payload: { x: xPos, y: yPos }
+  }
+}
+
+export function selectCourseColor(color) {
+  return {
+    type: "SELECT_COURSE_COLOR",
+    payload: color
+  }
+}
+
+export function submitCourseColor() {
+  return {
+    type: "SUBMIT_COURSE_COLOR"
   }
 }

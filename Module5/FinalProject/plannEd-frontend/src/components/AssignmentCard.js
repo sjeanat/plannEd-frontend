@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SubAssignmentCard from './SubAssignmentCard';
 import { deselectForToDo, selectForToDo, completeParent, fetchSubAssignments, completeAssignment, completeSubAssignment, selectAssignment, deselectAssignment, deselectSubAssignment } from '../actions/students';
+// import PriorityIcon from './svgs/PriorityIcon.js';
 
 
 class AssignmentCard extends Component {
