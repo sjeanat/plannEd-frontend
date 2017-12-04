@@ -79,7 +79,7 @@ class DashboardContainer extends Component {
         <NavBar {...this.props} activeTab="dashboard" />
         {this.props.student.id ? <AssignmentContainer /> : <Redirect to="/"/>}
         {this.props.addConflict ? <Redirect to="/course-directory"/> : null}
-        {this.props.student.id ? <DashboardCalendar defaultDate={this.props.defaultDate} onCalendarClick={this.props.onCalendarClick} calendar={this.props.calendar} {...calProps}/> : <Redirect to="/"/> }
+        {this.props.student.id ? <DashboardCalendar courseFilter={this.props.courseFilter} defaultDate={this.props.defaultDate} onCalendarClick={this.props.onCalendarClick} calendar={this.props.calendar} {...calProps}/> : <Redirect to="/"/> }
       </div>
     );
   };
@@ -99,7 +99,8 @@ function mapStateToProps(state) {
     selectedSlot: state.selectedSlot,
     selectedForToDo: state.selectedForToDo,
     calendarClick: state.calendarClick,
-    defaultDate: state.calendar.defaultDate
+    defaultDate: state.calendar.defaultDate,
+    courseFilter: state.studentAssignments.courseFilter
   }
 };
 

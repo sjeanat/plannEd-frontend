@@ -17,7 +17,14 @@ export default class DashboardCalendar extends Component {
 
   getEventColor = (event) => {
     const color = event.color;
-    return { style: { backgroundColor: color, border: color } }
+    console.log("get event color")
+    console.log("course filter", this.props.courseFilter, "event parent", event.parentId)
+    if (parseInt(this.props.courseFilter) === event.parentId) {
+      console.log("hit")
+      return { style: { backgroundColor: color, border: color, opacity: 0.5 } }
+    } else {
+      return { style: { backgroundColor: color, border: color } }
+    }
   };
 
   render() {
@@ -28,8 +35,10 @@ export default class DashboardCalendar extends Component {
       eventType: date.eventType,
       startDate: new Date(...date.startDate),
       endDate: new Date(...date.endDate),
-      color: date.color
+      color: date.color,
+      parentId: date.parentId
     }));
+    console.log("calendar render")
     // ["month", "week", "work_week", "day", "agenda"]
     const defaultDate = !!this.props.defaultDate ? this.props.defaultDate : new Date("9/04/2017")
     return (
