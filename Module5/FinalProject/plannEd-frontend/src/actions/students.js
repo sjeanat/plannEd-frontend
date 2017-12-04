@@ -376,7 +376,7 @@ export function submitToDo(date, time, studentAssignmentId, title) {
     })
       .then(resp => resp.json())
       .then(json => {
-        dispatch({ type: "SUBMITED_TO_DO", payload: json })
+        dispatch({ type: "SUBMITTED_TO_DO", payload: json })
       })
   }
 }

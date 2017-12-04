@@ -669,6 +669,14 @@ export default function studentReducer(
           title: action.payload
         }
       }
+    case "SUBMITTED_TO_DO":
+      return {
+        ...state,
+        calendar: {
+          ...state.calendar,
+          toDoItems: [...state.calendar.toDoItems, action.payload]
+        }
+      }
     default:
       return state;
   }
