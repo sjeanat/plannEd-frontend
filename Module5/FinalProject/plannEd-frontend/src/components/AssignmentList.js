@@ -8,7 +8,7 @@ export default class AssignmentList extends Component {
       return <AssignmentCard key={assignment.studentAssignmentId} assignment={assignment}/>
     });
     return (
-      <div>
+      <div className="assignment-list-container-inner">
         {assignments}
       </div>
     );

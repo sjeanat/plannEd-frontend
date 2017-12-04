@@ -21,7 +21,9 @@ class AssignmentContainer extends Component {
           ?
             <div className="assignment-container">
               <AssignmentSearchForm courses={this.props.studentCourses} assignments={this.props.studentAssignments}/>
-              <AssignmentList assignments={this.props.studentAssignments.display}/>
+              <div className="assignment-list-container">
+                <AssignmentList assignments={this.props.studentAssignments.display}/>
+              </div>
             </div>
           :
             <Redirect to="/"/>
@@ -31,9 +33,6 @@ class AssignmentContainer extends Component {
   };
 };
 
-        // <NavBar {...this.props} activeTab='assignments'/>
-
-        
 function mapStateToProps(state) {
   return {
     student: state.student,

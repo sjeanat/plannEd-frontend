@@ -49,8 +49,8 @@ class AssignmentSearchForm extends Component {
       return <option key={idx} value={course.studentCourseId}>{course.title}</option>
     });
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
+      <div className="assignment-form-container">
+        <form className="assignment-form" onSubmit={this.handleSubmit}>
           Incomplete: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" value="Incomplete"/>
           Completed: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" value="Completed"/>
           All: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" value="All" />
@@ -58,10 +58,6 @@ class AssignmentSearchForm extends Component {
           <select onChange={this.handleCourseChange}>
             <option value="All Courses">All Courses</option>
             {courseOptions}
-          </select>
-          Sort By:
-          <select onChange={this.handleSortChange}>
-            <option value="Due Date">Due Date</option>
           </select>
           Asc:
           <input onClick={this.handleSortDirection} type="radio" name="sort" value="Ascending"/>

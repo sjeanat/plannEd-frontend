@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { signOutUser } from '../actions/students';
 import AssignmentContainer from '../containers/AssignmentContainer';
 import generateKeyFrames from './helpers/generateKeyFrames';
+import DashboardIcon from './svgs/DashboardIcon';
 
 let prevTab = '';
 
@@ -19,20 +20,14 @@ const tabPositions = {
 
 class NavBar extends Component {
 
-  // constructor(props) {
-  //    super(props);
-  //
-  //    this.setPrevTab = this.setPrevTab.bind(this);
-  //  }
-
    getActiveTabStyle = () => {
      const { activeTab } = this.props;
      if (prevTab) {
        generateKeyFrames(tabPositions[prevTab], tabPositions[activeTab]);
 
        return {
-         WebkitAnimation: 'slide-tab 0.8s',
-         animation: 'slide-tab 0.8s',
+         WebkitAnimation: 'slide-tab 0.3s',
+         animation: 'slide-tab 0.3s',
          animationFillMode: 'forwards'
        };
      } else {
@@ -50,12 +45,13 @@ class NavBar extends Component {
 
   render() {
     const { activeTab } = this.props;
-    const isAssignmentsTab = activeTab === 'assignments';
-    const assignmentsActiveClass = isAssignmentsTab ? 'active' : '';
+    const assignmentsActiveClass = activeTab === 'assignments' ? 'active' : '';
+    const dashboardActiveClass = activeTab === 'dashboard' ? 'active' : '';
     const directoryActiveClass = activeTab === 'directory' ? 'active' : '';
     const signinActiveClass = activeTab === 'signin' ? 'active' : '';
     const signupActiveClass = activeTab === 'signup' ? 'active' : '';
     let activeTabStyle = this.getActiveTabStyle();
+
     return (
       <div className="navbar-wrapper">
         <span style={activeTabStyle} className="active-tab">
@@ -73,8 +69,14 @@ class NavBar extends Component {
           {this.props.studentId
             ?
               <div>
-                <li onClick={this.setPrevTab} className="navlink" ><NavLink activeClassName="active" className="link" to="/dashboard" exact>Dashboard</NavLink></li>
-                <li onClick={this.setPrevTab} className="navlink" ><NavLink activeClassName="active" className="link" to="/course-directory" exact>Course Directory</NavLink></li>
+                <li onClick={this.setPrevTab} className={`navlink ${dashboardActiveClass}`}>
+                  <NavLink activeClassName="active" className="link" to="/dashboard" exact>
+                    <div className="icon">
+                      <DashboardIcon />
+                    </div>
+                  </NavLink>
+                </li>
+                <li onClick={this.setPrevTab} className={`navlink ${directoryActiveClass}`}><NavLink activeClassName="active" className="link" to="/course-directory" exact>Course Directory</NavLink></li>
                 <li onClick={this.setPrevTab} className="navlink" onClick={this.handleSignOut}><NavLink className="link sign-out" to="/" exact>Sign Out</NavLink></li>
               </div>
             :
@@ -88,12 +90,6 @@ class NavBar extends Component {
     );
   };
 };
-
-// {isAssignmentsTab &&
-//   <div className="nav-assignments">
-//     <AssignmentContainer />
-//   </div>
-// }
 
 function mapStateToProps(state) {
   return {
