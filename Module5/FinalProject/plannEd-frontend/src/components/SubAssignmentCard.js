@@ -22,7 +22,8 @@ export default class SubAssignmentCard extends Component {
   };
 
   handleAddToDo = () => {
-    this.props.onSelectForToDo(this.props.assignment)
+    console.log("this.props", this.props)
+    this.props.selectedForToDo === this.props.assignment.studentAssignmentId ? this.props.onDeselectForToDo() : this.props.onSelectForToDo(this.props.assignment.studentAssignmentId);
   };
 
   render() {
@@ -32,13 +33,13 @@ export default class SubAssignmentCard extends Component {
         show = true;
       }
     });
-
+    console.log("sub assignment render")
     return (
       <div className="sub-assignment-card">
         <h2>{this.props.assignment.title}</h2>
         <p>{this.props.assignment.dueDate}</p>
         <p>{this.props.assignment.description}</p>
-        <button onClick={this.handleAddToDo}>{(this.props.selectedForToDo && (this.props.selectedForToDo.studentAssignmentId === this.props.assignment.studentAssignmentId)) ? "Add To Calendar" : "+ To Do"}</button>
+        <button onClick={this.handleAddToDo}>{this.props.selectedForToDo === this.props.assignment.studentAssignmentId ? "Choose A Date >" : "+ To Do"}</button>
         {this.props.assignment.hasSubAssignments
           ?
             <div>

@@ -9,7 +9,7 @@ export default class DashboardCalendar extends Component {
   render() {
     BigCalendar.momentLocalizer(moment);
     const allViews = Object.keys(BigCalendar.Views).map(k => BigCalendar.Views[k])
-    const calEvents = [...this.props.calendar.courses, ...this.props.calendar.dueDates].map(date => ({
+    const calEvents = [...this.props.calendar.courses, ...this.props.calendar.dueDates, ...this.props.calendar.toDoItems].map(date => ({
       title: date.title,
       eventType: date.eventType,
       startDate: new Date(...date.startDate),

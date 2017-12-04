@@ -37,7 +37,14 @@ export default function studentReducer(
       selectedSEM: null,
       selectedTA: null
     },
-    selectedForTodo: {},
+    selectedForTodo: 0,
+    slotSelected: false,
+    selectedSlot: {
+      startTime: null,
+      endTime: null,
+      info: null,
+      title: null
+    },
     selectedAssignment: {
       id: [],
       subAssignments: [],
@@ -122,7 +129,7 @@ export default function studentReducer(
           selectedSEM: null,
           selectedTA: null
         },
-        selectedForTodo: {},
+        selectedForTodo: 0,
         selectedAssignment: {
           id: [],
           subAssignments: [],
@@ -236,6 +243,7 @@ export default function studentReducer(
       const fetchedAssignments = action.payload.studentAssignments;
       const fetchedDueDates = action.payload.dueDates;
       const fetchedCourseDates = action.payload.courseDates;
+      const fetchedToDoItems = action.payload.toDoItems;
       return {
         ...state,
         studentAssignments: {
@@ -246,7 +254,8 @@ export default function studentReducer(
         calendar: {
           ...state.calendar,
           courses: fetchedCourseDates,
-          dueDates: fetchedDueDates
+          dueDates: fetchedDueDates,
+          toDoItems: fetchedToDoItems
         },
         loading: false
       };
@@ -619,6 +628,46 @@ export default function studentReducer(
       return {
         ...state,
         selectedForToDo: action.payload
+      }
+    case "DESELECT_FOR_TO_DO":
+      console.log("reducer deselect to do")
+      return {
+        ...state,
+        selectedForToDo: 0
+      }
+    case "SELECT_SLOT":
+      return {
+        ...state,
+        slotSelected: true,
+        selectedSlot: {
+          ...state.selectedSlot,
+          info: action.payload
+        }
+      }
+    case "START_CHANGE":
+      return {
+        ...state,
+        selectedSlot: {
+          ...state.selectedSlot,
+          startTime: action.payload
+        }
+      }
+    case "END_CHANGE":
+      console.log("end change", action.payload)
+      return {
+        ...state,
+        selectedSlot: {
+          ...state.selectedSlot,
+          endTime: action.payload
+        }
+      }
+    case "TITLE_CHANGE":
+      return {
+        ...state,
+        selectedSlot: {
+          ...state.selectedSlot,
+          title: action.payload
+        }
       }
     default:
       return state;

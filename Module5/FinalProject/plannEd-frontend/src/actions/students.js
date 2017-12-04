@@ -126,10 +126,11 @@ export function fetchSubAssignments(studentAssignmentId) { // CHECKED
 
 export function fetchAssignments(studentId) { // CHECKED
   return (dispatch) => {
+    dispatch({ type: "LOADING" })
     return fetch(`http://localhost:3000/api/v1/students/student_assignments?studentId=${studentId}`)
     .then(resp => resp.json())
     .then(data => {
-      dispatch({ type: "FETCHED_ASSIGNMENTS", payload: { studentAssignments: data.studentAssignments, dueDates: data.dueDates, courseDates: data.courseDates }})
+      dispatch({ type: "FETCHED_ASSIGNMENTS", payload: { studentAssignments: data.studentAssignments, dueDates: data.dueDates, courseDates: data.courseDates, toDoItems: data.toDoItems }})
       dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
     });
   };
@@ -321,9 +322,61 @@ export function changeAssignmentsDisplay() {
   }
 };
 
-export function selectForToDo(assignment) {
+export function selectForToDo(studentAssignmentId) {
   return {
     type: "SELECT_FOR_TO_DO",
-    payload: assignment
+    payload: studentAssignmentId
+  }
+}
+
+export function deselectForToDo() {
+  return {
+    type: "DESELECT_FOR_TO_DO"
+  }
+}
+
+export function selectSlot(slotInfo) {
+  return {
+    type: "SELECT_SLOT",
+    payload: slotInfo
+  }
+}
+
+export function startChange(startTime) {
+  return {
+    type: "START_CHANGE",
+    payload: startTime
+  }
+}
+
+export function endChange(endTime) {
+  return {
+    type: "END_CHANGE",
+    payload: endTime
+  }
+}
+
+export function titleChange(title) {
+  return {
+    type: "TITLE_CHANGE",
+    payload: title
+  }
+}
+
+export function submitToDo(date, time, studentAssignmentId, title) {
+  return (dispatch) => {
+    dispatch({ type: "LOADING" })
+    return fetch('http://localhost:3000/api/v1/students/add_assignment_to_do', {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ date, time, studentAssignmentId, title })
+    })
+      .then(resp => resp.json())
+      .then(json => {
+        dispatch({ type: "SUBMITED_TO_DO", payload: json })
+      })
   }
 }
