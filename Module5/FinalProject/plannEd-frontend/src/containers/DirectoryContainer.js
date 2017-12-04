@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
+import { removeAddConflict } from '../actions/students';
+
+// Components
 import DirectorySearchForm from '../components/DirectorySearchForm';
 import DirectoryCourses from '../components/DirectoryCourses';
-import { removeAddConflict } from '../actions/students';
+import NavBar from '../components/NavBar';
 
 class DirectoryContainer extends Component {
 
@@ -12,18 +15,20 @@ class DirectoryContainer extends Component {
       alert(this.props.addConflict)
       this.props.onRemoveAddConflict()
     };
-    
+
     if (this.props.student.id) {
       return (
         <div className="course-container-wrapper">
-          <DirectorySearchForm />
-          {this.props.addConflict}
-          <DirectoryCourses history={this.props.history} courses={this.props.directoryCourses} studentCourses={this.props.studentCourses} student={this.props.student}/>
+          <NavBar {...this.props} activeTab="directory" />
+          <div className="course-container">
+            <DirectorySearchForm />
+            <DirectoryCourses history={this.props.history} courses={this.props.directoryCourses} studentCourses={this.props.studentCourses} student={this.props.student}/>
+          </div>
         </div>
       )
     } else {
       return (
-        <Redirect to="/home"/>
+        <Redirect to="/"/>
       )
     }
   };

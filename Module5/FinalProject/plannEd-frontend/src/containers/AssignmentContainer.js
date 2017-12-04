@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { fetchAssignments } from '../actions/students';
 import AssignmentSearchForm from '../components/AssignmentSearchForm';
 import AssignmentList from '../components/AssignmentList';
+import NavBar from '../components/NavBar';
 
 class AssignmentContainer extends Component {
 
@@ -15,6 +16,7 @@ class AssignmentContainer extends Component {
   render() {
     return (
       <div className="assignment-container-wrapper">
+        <NavBar {...this.props} activeTab='assignments'/>
         { this.props.student.id
           ?
             <div className="assignment-container">
@@ -22,7 +24,7 @@ class AssignmentContainer extends Component {
               <AssignmentList assignments={this.props.studentAssignments.display}/>
             </div>
           :
-            <Redirect to="/home"/>
+            <Redirect to="/"/>
         }
       </div>
     );

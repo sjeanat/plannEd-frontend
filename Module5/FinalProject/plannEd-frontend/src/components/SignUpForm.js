@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { signUpUser, enterEmail, enterFirstName, enterLastName } from '../actions/students';
 import { connect } from 'react-redux';
+import NavBar from './NavBar';
 
 class SignUpForm extends Component {
 
@@ -19,12 +20,12 @@ class SignUpForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.props.onSignUp(this.props.student.email, this.props.student.firstName, this.props.student.lastName);
-    this.props.history.push("/dashboard");
   };
 
   render() {
     return (
-      <div>
+      <div className="signup-container">
+        <NavBar {...this.props} activeTab="signup" />
         <form onSubmit={this.handleSubmit}>
           Email: <input onChange={this.handleEmailChange} type="text" value={this.props.student.email}/>
           First Name: <input onChange={this.handleFirstNameChange} type="text" value={this.props.student.firstName}/>
