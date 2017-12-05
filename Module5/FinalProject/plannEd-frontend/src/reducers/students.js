@@ -484,7 +484,7 @@ export default function studentReducer(
         studentAssignments: {
           ...state.studentAssignments,
           completedFilter: "None",
-          courseFilter: "All",
+          courseFilter: "All Courses",
           sortBy: "Due Date",
           sortDirection: "Ascending",
           limit: "",

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { changeAssignmentsDisplay, sortBy, sortDirection, limitStartChange, limitEndChange, filterByCourse, filterByCompleted, removeCompletedFilter, filterByIncomplete } from '../actions/students';
+import { changeAssignmentsDisplay, sortDirection, limitStartChange, limitEndChange, filterByCourse, filterByCompleted, removeCompletedFilter, filterByIncomplete } from '../actions/students';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import './AssignmentSearchForm.css';
@@ -10,12 +10,6 @@ import $ from 'jquery';
 class AssignmentSearchForm extends Component {
 
   componentDidMount() {
-    this.props.onChangeAssignmentsDisplay();
-
-  };
-
-  handleSubmit = (event) => {
-    event.preventDefault();
     this.props.onChangeAssignmentsDisplay();
   };
 
@@ -30,11 +24,6 @@ class AssignmentSearchForm extends Component {
   handleSortDirection = (event) => {
     console.log("sort direction change:", event.target.value)
     this.props.onSortDirection(event.target.value);
-  };
-
-  handleLimitChange = (event) => {
-    console.log("limit change:", event.target.value)
-    this.props.onLimitChange(event.target.value);
   };
 
   handleCompletedFilter = (event) => {
@@ -65,9 +54,10 @@ class AssignmentSearchForm extends Component {
       return <option key={idx} value={course.studentCourseId}>{course.title}</option>
     });
     const aMoment = moment();
+    
     return (
       <div className="assignment-form-container">
-        <form className="assignment-form" onSubmit={this.handleSubmit}>
+        <form className="assignment-form">
           {console.log("completefilter", this.props.incompleteFilter)}
           Incomplete: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" checked={this.props.incompleteFilter ? "checked" : ""} value="Incomplete"/>
           Completed: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" value="Completed"/>
@@ -92,7 +82,6 @@ class AssignmentSearchForm extends Component {
             selected={this.props.limitEnd ? moment(this.props.limitEnd) : aMoment}
             onChange={this.handleLimitEndChange}
           />
-          <input type="submit" value="Search"/>
         </form>
       </div>
     );
@@ -124,9 +113,6 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeAssignmentsDisplay: () => {
       dispatch(changeAssignmentsDisplay());
-    },
-    onSortBy: (attribute) => {
-      dispatch(sortBy(attribute));
     },
     onSortDirection: (direction) => {
       dispatch(sortDirection(direction));

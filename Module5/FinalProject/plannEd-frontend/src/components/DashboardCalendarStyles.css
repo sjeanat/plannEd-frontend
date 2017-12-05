@@ -1,3 +1,6 @@
+
+
+
 .dashboard-calendar {
   margin: auto;
   position: absolute;
@@ -10,4 +13,6 @@
 .rbc-calendar {
   display: inline-block;
   z-index: 0;
+  width: 170%;
+  height: 550px;
 }

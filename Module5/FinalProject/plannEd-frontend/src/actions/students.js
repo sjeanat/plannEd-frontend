@@ -263,56 +263,59 @@ export function selectDirectoryCourseComponent(type, component, section) {
   }
 };
 
-export function sortBy(attribute) { // COMPLETE BELOW //
-  return {
-    type: "SORT_BY",
-    payload: attribute
-  }
-};
+// export function sortBy(attribute) { // COMPLETE BELOW //
+//   return {
+//     type: "SORT_BY",
+//     payload: attribute
+//   }
+// };
 
 export function sortDirection(direction) {
-  return {
-    type: "SORT_DIRECTION",
-    payload: direction
+  return (dispatch) => {
+    dispatch({ type: "SORT_DIRECTION", payload: direction })
+    dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
   }
 };
 
 export function limitStartChange(limit) {
-  return {
-      type: "LIMIT_START_CHANGE",
-      payload: limit
+  return (dispatch) => {
+    dispatch({ type: "LIMIT_START_CHANGE", payload: limit })
+    dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
   }
 };
 
 export function limitEndChange(limit) {
-  return {
-      type: "LIMIT_END_CHANGE",
-      payload: limit
+  return (dispatch) => {
+    dispatch({ type: "LIMIT_END_CHANGE", payload: limit })
+    dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
   }
 };
 
 export function filterByCourse(studentCourseId) {
-  return {
-    type: "FILTER_BY_COURSE",
-    payload: studentCourseId
+  return (dispatch) => {
+    dispatch({ type: "FILTER_BY_COURSE", payload: studentCourseId })
+    dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
   }
 };
 
 export function filterByCompleted() {
-  return {
-    type: "FILTER_BY_COMPLETED"
+  return (dispatch) => {
+    dispatch({ type: "FILTER_BY_COMPLETED" })
+    dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
   }
 };
 
 export function filterByIncomplete() {
-  return {
-    type: "FILTER_BY_INCOMPLETE"
+  return (dispatch) => {
+    dispatch({ type: "FILTER_BY_INCOMPLETE" })
+    dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
   }
 };
 
 export function removeCompletedFilter() {
-  return {
-    type: "REMOVE_COMPLETED_FILTER"
+  return (dispatch) => {
+    dispatch({ type: "REMOVE_COMPLETED_FILTER" })
+    dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
   }
 };
 

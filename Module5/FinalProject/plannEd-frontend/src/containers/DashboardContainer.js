@@ -5,7 +5,8 @@ import DashboardCalendar from '../components/DashboardCalendar';
 import AssignmentContainer from './AssignmentContainer';
 import NavBar from '../components/NavBar';
 import { deselectForToDo, calendarClick, titleChange, selectSlot, submitToDo, startChange, endChange } from '../actions/students';
-
+import ToDoFormAssignments from '../components/ToDoFormAssignments';
+import './DashboardContainer.css';
 
 
 class DashboardContainer extends Component {
@@ -42,44 +43,29 @@ class DashboardContainer extends Component {
   };
 
   render() {
-    const formCss = `
-    .to-do-form-wrapper {
-      position: absolute;
-      height: 200px;
-      width: 200px;
-      left: ${this.props.calendarClick.x}px;
-      top: ${this.props.calendarClick.y - 90}px;
-      z-index: 100;
-      background: red;
-    }
-    `
+
     const calProps = {slotSelected: this.slotSelected, setStartTime: this.setStartTime, setEndTime: this.setEndTime }
     return (
       <div className="dashboard-container">
-          <style>{formCss}</style>
+
           {this.props.slotSelected && (this.props.selectedForToDo !== 0)
             ?
-              <div className="to-do-form-wrapper assignment" >
-                <form onSubmit={this.handleSubmit}>
-                  Title:
-                  <input type="text" value={this.props.selectedSlot.title} onChange={this.handleTitleChange}/>
-                  <br/>
-                  Start Time:
-                  <input type="time" value={this.props.selectedSlot.startTime} onChange={this.handleStartChange}/>
-                  <br/>
-                  End Time:
-                  <input type="time" value={this.props.selectedSlot.endTime} onChange={this.handleEndChange}/>
-                  <br/>
-                  <input type="submit" value="Create To Do!"/>
-                  <p onClick={this.handleCloseForm}>X</p>
-                </form>
+              <div className="to-do-form-assignment-container" >
+                <ToDoFormAssignments calendarClick={this.props.calendarClick} handleSubmit={this.handleSubmit} selectedSlot={this.props.selectedSlot} handleTitleChange={this.handleTitleChange} handleStartChange={this.handleStartChange} handleEndChange={this.handleEndChange} handleCloseForm={this.handleCloseForm}/>
               </div>
             : null
           }
         <NavBar {...this.props} activeTab="dashboard" />
         {this.props.student.id ? <AssignmentContainer /> : <Redirect to="/"/>}
         {this.props.addConflict ? <Redirect to="/course-directory"/> : null}
-        {this.props.student.id ? <DashboardCalendar courseFilter={this.props.courseFilter} defaultDate={this.props.defaultDate} onCalendarClick={this.props.onCalendarClick} calendar={this.props.calendar} {...calProps}/> : <Redirect to="/"/> }
+        {this.props.student.id
+          ?
+            <div className="dashboard-calendar-wrapper">
+              <DashboardCalendar courseFilter={this.props.courseFilter} defaultDate={this.props.defaultDate} onCalendarClick={this.props.onCalendarClick} calendar={this.props.calendar} {...calProps}/>
+            </div>
+          :
+            <Redirect to="/"/>
+        }
       </div>
     );
   };
