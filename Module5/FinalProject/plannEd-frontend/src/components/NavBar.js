@@ -6,6 +6,8 @@ import { signOutUser } from '../actions/students';
 import AssignmentContainer from '../containers/AssignmentContainer';
 import generateKeyFrames from './helpers/generateKeyFrames';
 import DashboardIcon from './svgs/DashboardIcon';
+import SigninIcon from './svgs/SigninIcon';
+import SignupIcon from './svgs/SignupIcon';
 
 let prevTab = '';
 
@@ -13,15 +15,17 @@ const tabPositions = {
   dashboard: 0,
   directory: 70,
   signout: 140,
-  home: -100,
-  signin: 70,
-  signup: 0
+  home: -70,
+  signin: 0,
+  signup: 70
 };
 
 class NavBar extends Component {
 
    getActiveTabStyle = () => {
      const { activeTab } = this.props;
+     console.log(prevTab, activeTab);
+     console.log(tabPositions[prevTab], tabPositions[activeTab]);
      if (prevTab) {
        generateKeyFrames(tabPositions[prevTab], tabPositions[activeTab]);
 
@@ -31,7 +35,7 @@ class NavBar extends Component {
          animationFillMode: 'forwards'
        };
      } else {
-       return { top: `${tabPositions[activeTab] + 70}px` };
+       return { top: `${tabPositions[activeTab]}px` };
      }
    }
 
@@ -59,13 +63,6 @@ class NavBar extends Component {
           <span className="after-second"></span>
         </span>
         <ul className="navlinks-wrapper">
-          <li className="navlink">
-            <NavLink className="link home" to="/" exact>
-              <div className="logo">
-                <img className="logo-img" src="../cornell.png"></img>
-              </div>
-            </NavLink>
-          </li>
           {this.props.studentId
             ?
             <div>
@@ -81,8 +78,22 @@ class NavBar extends Component {
             </div>
             :
             <div>
-              <li onClick={this.setPrevTab} className={`navlink ${signupActiveClass}`}><NavLink activeClassName="active" className="link" to="/sign-up" exact>Sign Up</NavLink></li>
-              <li onClick={this.setPrevTab} className={`navlink ${signinActiveClass}`}><NavLink activeClassName="active" className="link sign-in" to="/sign-in" exact>Sign In</NavLink></li>
+              <li onClick={this.setPrevTab} className={`navlink ${signinActiveClass}`}>
+                <NavLink activeClassName="active" className="link sign-in" to="/sign-in" exact>
+                  <div className="icon text">
+                    <SigninIcon />
+                    <div className="text">Sign In</div>
+                  </div>
+                </NavLink>
+              </li>
+              <li onClick={this.setPrevTab} className={`navlink ${signupActiveClass}`}>
+                <NavLink activeClassName="active" className="link" to="/sign-up" exact>
+                  <div className="icon text">
+                    <SignupIcon />
+                    <div className="text">Sign Up</div>
+                  </div>
+                </NavLink>
+              </li>
             </div>
           }
         </ul>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { signUpUser, enterEmail, enterFirstName, enterLastName } from '../actions/students';
 import { connect } from 'react-redux';
+import MainNavBar from './MainNavBar';
 import NavBar from './NavBar';
 
 class SignUpForm extends Component {
@@ -29,13 +30,16 @@ class SignUpForm extends Component {
   render() {
     return (
       <div className="signup-container">
-        <NavBar {...this.props} activeTab="signup" />
-        <form onSubmit={this.handleSubmit}>
-          Email: <input onChange={this.handleEmailChange} type="text" value={this.props.student.email}/>
-          First Name: <input onChange={this.handleFirstNameChange} type="text" value={this.props.student.firstName}/>
-          Last Name: <input onChange={this.handleLastNameChange} type="text" value={this.props.student.lastName}/>
-          <input type="submit" value="sign up"/>
-        </form>
+        <MainNavBar />
+        <div className="content-wrapper">
+          <NavBar {...this.props} activeTab="signup" />
+          <form className="signup-form-container" onSubmit={this.handleSubmit}>
+            Email: <input onChange={this.handleEmailChange} type="text" value={this.props.student.email}/>
+            First Name: <input onChange={this.handleFirstNameChange} type="text" value={this.props.student.firstName}/>
+            Last Name: <input onChange={this.handleLastNameChange} type="text" value={this.props.student.lastName}/>
+            <input type="submit" value="sign up"/>
+          </form>
+        </div>
       </div>
     );
   };

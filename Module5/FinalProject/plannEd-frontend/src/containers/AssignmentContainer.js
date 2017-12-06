@@ -15,15 +15,12 @@ class AssignmentContainer extends Component {
 
   render() {
     return (
-      <div className="assignment-container-wrapper">
+      <div className="assignment-container-wrapper sidebar-wrapper">
 
         { this.props.student.id
           ?
-            <div className="assignment-container">
-              <AssignmentSearchForm courses={this.props.studentCourses} assignments={this.props.studentAssignments}/>
-              <div className="assignment-list-container">
-                <AssignmentList assignments={this.props.studentAssignments.display}/>
-              </div>
+            <div className="assignment-list-container">
+              <AssignmentList assignments={this.props.studentAssignments.display}/>
             </div>
           :
             <Redirect to="/"/>

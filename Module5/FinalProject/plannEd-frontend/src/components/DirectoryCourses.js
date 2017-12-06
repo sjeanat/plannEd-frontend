@@ -10,8 +10,10 @@ export default class DirectoryCourses extends Component {
     ))
 
     return (
-      <div>
-        {courses}
+      <div className="directory-container-wrapper sidebar-wrapper">
+        <div className="directory-list-container">
+          {courses}
+        </div>
       </div>
     );
   };

@@ -1,11 +1,12 @@
 import React from 'react';
+import MainNavBar from './MainNavBar';
 import NavBar from './NavBar';
 
 const Home = props => {
   return(
     <div className="home-wrapper">
+      <MainNavBar />
       <NavBar {...props} activeTab='home' />
-      <h1>Welcome to PlannEd! Guarunteed to make the college a breeze.</h1>
     </div>
   );
 };

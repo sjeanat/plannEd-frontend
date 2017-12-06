@@ -1,18 +1,19 @@
-
-
-
 .dashboard-calendar {
+  display: flex;
   margin: auto;
-  position: absolute;
-  right: 450px;
+  position: relative;
   text-align: center;
-  top: 100px;
-  width: 400px;
+  width: 100%;
 }
 
 .rbc-calendar {
-  display: inline-block;
+  margin: auto;
+  width: 80%;
   z-index: 0;
-  width: 170%;
-  height: 550px;
+}
+
+.rbc-toolbar {
+  flex-wrap: wrap;
+  font-size: 16px;
+  margin-bottom: 10px;
 }

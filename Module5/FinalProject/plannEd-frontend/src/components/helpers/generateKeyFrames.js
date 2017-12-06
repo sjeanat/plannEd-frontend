@@ -10,6 +10,7 @@ const injectStyle = (style) => {
 };
 
 const generatKeyFrames = (startPosition, endPosition) => {
+
   injectStyle(`
     @-webkit-keyframes slide-tab {
       0%   { transform: translateY(${startPosition}px); }
@@ -17,12 +18,12 @@ const generatKeyFrames = (startPosition, endPosition) => {
     }
   `);
 
-  injectStyle(`
-    @keyframes slide-tab {
-      0%   { transform: translateY(${startPosition}px); }
-      100% { transform: translateY(${endPosition}px); }
-    }
-  `);
+  // injectStyle(`
+  //   @keyframes slide-tab {
+  //     0%   { transform: translateY(${endPosition}px); }
+  //     100% { transform: translateY(${startPosition}px); }
+  //   }
+  // `);
 };
 
 export default generatKeyFrames;

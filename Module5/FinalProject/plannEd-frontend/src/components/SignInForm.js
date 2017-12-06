@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { signInUser, enterEmail } from '../actions/students';
 import { connect } from 'react-redux';
+import MainNavBar from './MainNavBar';
 import NavBar from './NavBar';
 
 class SignUpForm extends Component {
@@ -21,11 +22,14 @@ class SignUpForm extends Component {
   render() {
     return (
       <div className="signin-container">
-        <NavBar {...this.props} activeTab="signin" />
-        <form onSubmit={this.handleSubmit}>
-          Email: <input onChange={this.handleEmailChange} type="text" value={this.props.student.email}/>
-          <input type="submit" value="sign in"/>
-        </form>
+        <MainNavBar />
+        <div className="content-wrapper">
+          <NavBar {...this.props} activeTab="signin" />
+          <form className="signin-form-container" onSubmit={this.handleSubmit}>
+            Email: <input onChange={this.handleEmailChange} type="text" value={this.props.student.email}/>
+            <input type="submit" value="sign in"/>
+          </form>
+        </div>
       </div>
     );
   };

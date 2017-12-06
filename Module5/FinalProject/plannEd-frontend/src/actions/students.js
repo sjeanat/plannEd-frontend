@@ -1,7 +1,7 @@
 export function signUpUser(email, firstName, lastName) {
   return (dispatch) => {
     dispatch({ type: "LOADING" });
-    return fetch("http://localhost:3000/api/v1/students/sign_up", {
+    return fetch("http://192.168.0.3:3000/api/v1/students/sign_up", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -17,7 +17,7 @@ export function signUpUser(email, firstName, lastName) {
 export function signInUser(email) {
   return (dispatch) => {
     dispatch({ type: "LOADING" });
-    return fetch(`http://localhost:3000/api/v1/students/sign_in`, {
+    return fetch(`http://192.168.0.3:3000/api/v1/students/sign_in`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -27,7 +27,7 @@ export function signInUser(email) {
     })
     .then(resp => resp.json())
     .then(json => {
-      return fetch(`http://localhost:3000/api/v1/students/student_courses?studentId=${json.student.id}`)
+      return fetch(`http://192.168.0.3:3000/api/v1/students/student_courses?studentId=${json.student.id}`)
       .then(resp => resp.json())
       .then(data => {
         dispatch({ type: "SIGNED_IN_AND_FETCHED_COURSES", payload: {
@@ -82,7 +82,7 @@ export function signOutUser() {
 export function addCourse(student, studentCourse, instructors, color) {
   return (dispatch) => {
     dispatch({ type: 'LOADING'});
-    return fetch(`http://localhost:3000/api/v1/students/add_student_course`, {
+    return fetch(`http://192.168.0.3:3000/api/v1/students/add_student_course`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -111,7 +111,7 @@ export function removeAddConflict() {
 export function fetchSubAssignments(studentAssignmentId) { // CHECKED
   return (dispatch) => {
     dispatch({type: "LOADING"});
-    return fetch(`http://localhost:3000/api/v1/students/get_sub_assignments?studentAssignmentId=${studentAssignmentId}`)
+    return fetch(`http://192.168.0.3:3000/api/v1/students/get_sub_assignments?studentAssignmentId=${studentAssignmentId}`)
       .then(resp => resp.json())
       .then(data => {
         dispatch({ type: "FETCHED_SUB_ASSIGNMENTS", payload: {
@@ -127,7 +127,7 @@ export function fetchSubAssignments(studentAssignmentId) { // CHECKED
 export function fetchAssignments(studentId) { // CHECKED
   return (dispatch) => {
     dispatch({ type: "LOADING" })
-    return fetch(`http://localhost:3000/api/v1/students/student_assignments?studentId=${studentId}`)
+    return fetch(`http://192.168.0.3:3000/api/v1/students/student_assignments?studentId=${studentId}`)
     .then(resp => resp.json())
     .then(data => {
       dispatch({ type: "FETCHED_ASSIGNMENTS", payload: { studentAssignments: data.studentAssignments, dueDates: data.dueDates, courseDates: data.courseDates, toDoItems: data.toDoItems }})
@@ -161,7 +161,7 @@ export function fetchDirectoryCourses(semester, subject) { // CHECKED
 export function completeAssignment(studentAssignmentId, isParent) { // CHECKED
   return (dispatch) => {
     dispatch({ type: "LOADING" });
-    return fetch("http://localhost:3000/api/v1/students/complete_assignment", {
+    return fetch("http://192.168.0.3:3000/api/v1/students/complete_assignment", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -181,7 +181,7 @@ export function completeAssignment(studentAssignmentId, isParent) { // CHECKED
 export function completeSubAssignment(studentAssignmentId, rootAssignmentIds, subAssignmentIds, isParent) { // CHECKED
   return (dispatch) => {
     dispatch({ type: "LOADING" });
-    return fetch("http://localhost:3000/api/v1/students/complete_assignment", {
+    return fetch("http://192.168.0.3:3000/api/v1/students/complete_assignment", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -207,7 +207,7 @@ export function completeSubAssignment(studentAssignmentId, rootAssignmentIds, su
 export function completeParent(studentAssignmentId) {
   return (dispatch) => {
     dispatch({ type: "LOADING "});
-    return fetch("http://localhost:3000/api/v1/students/complete_parent_assignment", {
+    return fetch("http://192.168.0.3:3000/api/v1/students/complete_parent_assignment", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -376,7 +376,7 @@ export function titleChange(title) {
 export function submitToDo(date, time, studentAssignmentId, title) {
   return (dispatch) => {
     dispatch({ type: "LOADING" })
-    return fetch('http://localhost:3000/api/v1/students/add_assignment_to_do', {
+    return fetch('http://192.168.0.3:3000/api/v1/students/add_assignment_to_do', {
       method: "post",
       headers: {
         "Content-Type": "application/json",

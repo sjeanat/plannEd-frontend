@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchDirectorySubjects, fetchDirectoryCourses, enterDirectorySubject, enterDirectorySemester } from '../actions/students';
+import SearchIcon from '../components/svgs/SearchIcon';
 
 class DirectorySearchForm extends Component {
 
@@ -29,19 +30,23 @@ class DirectorySearchForm extends Component {
     })
     return (
       <div className="directory-search-form-wrapper">
-        <form onSubmit={this.handleSubmit}>
+        <form className="directory-form" onSubmit={this.handleSubmit}>
           <span className="course-form-label">Semester:</span>
-          <select className="course-form-select" onChange={this.handleSemesterChange} placeholder="select subject">
-            <option value="FA17">FA17</option>
-            <option value="WI17">WI17</option>
-            <option value="SP18">SP18</option>
-          </select>
+          <div className="form-select-container">
+            <select className="form-select" onChange={this.handleSemesterChange} placeholder="select subject">
+              <option value="FA17">FA17</option>
+              <option value="WI17">WI17</option>
+              <option value="SP18">SP18</option>
+            </select>
+          </div>
           <span className="course-form-label">Subject:</span>
-          <input className="course-form-input" list="subjects" name="subjects" onChange={this.handleSubjectChange}/>
+          <div className="form-select-container">
+            <input className="course-form-input" list="subjects" name="subjects" onChange={this.handleSubjectChange}/>
+          </div>
           <datalist id="subjects">
             {subjectOptions}
           </datalist>
-          <input type="submit" value="Find Classes"/>
+          <button className="button-search" type="submit" value="Search"><SearchIcon /></button>
         </form>
       </div>
     )
